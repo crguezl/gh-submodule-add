@@ -37,19 +37,23 @@ function usage(error) {
 }
 
 function gh(...args) {
-    let result = shell.exec(`gh ${args.join('')}`, {silent: true});
+    let command = `gh ${args.join('')}`;
+    deb(command);
+    let result = shell.exec(command, {silent: true});
     if (result.code !== 0) {
-      shell.echo(`Error: Command "gh ${args.join('')}" failed\n${result.stderr}`);
+      shell.echo(`Error: Command "gh ${command}" failed\n${result.stderr}`);
       shell.exit(result.code);
     }    
     return result.stdout;
 }
 
+function names2urls(names) {
+   let urls = names.map(repoName => gh(`browse -n --repo ${repoName}`));
+   return urls.map(u => u.replace(/\n$/, '.git'));
+}
+
 let repos = repoList.split(/\s*,\s*/);
 deb(repos)
 
-let urls = repos.map(repoName => {
-  gh(`browse -n --repo ${repoName}`)
-});
-
+let urls = names2urls(repos);
 deb(urls);
