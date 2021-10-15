@@ -4,6 +4,7 @@ const deb = (...args) => {
     if (debug) console.log(ins(...args, {depth: null})); 
 };
 
+const fs = require("fs");
 const shell = require('shelljs');
  
 deb(process.argv);
@@ -20,7 +21,8 @@ if (!shell.which('gh')) {
 
 const isGitFolder = sh("git rev-parse --is-inside-work-tree");
 console.log(isGitFolder);
-if (!isGitFolder && sh('[ -d .git ]')) {
+
+if (!isGitFolder && !fs.existsSync(".git ]")) {
     usage('Sorry, current folder is not the root of a git repo!');
 }
 
@@ -31,11 +33,12 @@ function usage(error) {
 
     gh-submodule-add '<[org1]/repo1>,...,<[orgN]/repoN>'
     
-    adds to the current repo the repos specified in the comma separated list 
+    Execute this command in the project root directory of the repo.
+    This extension adds to the current repo the repos specified in the comma separated list 
     'org1/repo1, org2/repo2', etc as git submodules of the current repo. 
     - If some org as  'org1' is not specified, it is assumed to be  the 
       same organization of the current repo.
-    - If one of the repos does'nt exist, throw an error.
+    - If one of the repos does'nt exist, it throw an error.
 `
     if (error) console.error(`Error!: ${error}`);
     console.log(help)
@@ -56,7 +59,7 @@ function sh(executable, ...args) {
 
 const gh = (...args) => sh("gh", ...args);
 
-const git = (...args) => sh("echo git", ...args);
+const git = (...args) => sh("git", ...args);
 
 
 function names2urls(names) {
