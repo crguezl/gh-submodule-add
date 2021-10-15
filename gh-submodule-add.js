@@ -9,15 +9,21 @@ const { Command } = require('commander');
 
 const help = 
 `
-gh-submodule-add <options>
+gh submodule-add <options>
 
-  gh-submodule-add -c '<[org1]/repo1>,...,<[orgN]/repoN>'
+  gh submodule-add -c '<[org1]/repo1>,...,<[orgN]/repoN>'
 
     Execute this command in the project root directory of the repo.
-    This extension adds to the current repo the repos specified in the comma separated list 
+    This extension adds to the current repo the repos specified in the 
+    comma separated list 
     'org1/repo1,org2/repo2', etc as git submodules of the current repo. 
     - If one of the 'org/repo' repos doesn't exist, it throws an error.
-`
+
+  gh submodule-add -f file
+    
+    The file has to have a repo per line
+
+    `
 
 const program = new Command();
 program.version(require('./package.json').version);
@@ -29,7 +35,8 @@ program
   .option('-r, --regexp <regexp>', 'filter <query> results using <regexp>')
   .option('-c, --csr <comma separated list of repos>', 'the list of repos is specified as a comma separated list')
   .option('-f, --file <file>', 'file with the list of repos, one per line')
-  .option('-n --dryrun','just show what repos will be added as submodules');
+  .option('-n --dryrun','just show what repos will be added as submodules')
+  .option('-o --org <org>', 'default organization or user');
 
 program.parse(process.argv);
 const debug = program.debug; 
@@ -78,6 +85,16 @@ function names2urls(names) {
    return urls.map(u => u.replace(/\n$/, '.git'));
 }
 
+function getOrgFromRepo() {
+    try {
+        return gh("remote get-url --push origin")
+           .replace(/^.*:/,'')
+           .replace(/\/.*$/,'')
+    } catch(e) {
+      return false;
+    }
+}
+
 let repoList;
 
 debugger;
@@ -98,6 +115,17 @@ if (options.regexp) {
     repos = repos.filter(rn => regexp.test(rn));
 }
 
+let org = options.org || process.env["GITHUB_ORG"] || getOrgFromRepo();
+
+const LegalGHRepoNames = /(?:([\p{Letter}\p{Number}._-]+)\/)?([\p{Letter}\p{Number}._-]+)/;
+
+if (org) {
+    repos = repos.map(r => {
+      let m = LegalGHRepoNames.exec(r);
+      if (!m[1]) r = org+"/"+r;
+      return r;
+    })
+}
 deb(repos)
 
 if (options.dryrun) {
