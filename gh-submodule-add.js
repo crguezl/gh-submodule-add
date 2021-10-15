@@ -1,17 +1,45 @@
 const ins = require("util").inspect;
-const debug = false; 
 const deb = (...args) => { 
     if (debug) console.log(ins(...args, {depth: null})); 
 };
 
 const fs = require("fs");
 const shell = require('shelljs');
- 
-deb(process.argv);
+const { Command } = require('commander');
 
-let repoList = process.argv[2];
+const help = 
+`
+gh-submodule-add -c '<[org1]/repo1>,...,<[orgN]/repoN>'
+
+Execute this command in the project root directory of the repo.
+This extension adds to the current repo the repos specified in the comma separated list 
+'org1/repo1, org2/repo2', etc as git submodules of the current repo. 
+- If some org as  'org1' is not specified, it is assumed to be  the 
+  same organization of the current repo.
+- If one of the repos doesn't exist, it throw an error.
+- If the current repo has no "remote", it  is created one in GitHub with alias "origin"  
+`
+
+const program = new Command();
+program.version(require('./package.json').version);
+
+program
+  .usage(help)
+  .option('-d, --debug', 'output extra debugging')
+  .option('-s, --search <query>', 'search <query >using GitHub Syntax')
+  .option('-r, --reg <regexp>', 'filter <query> results using <regexp>. Implies -s')
+  .option('-c, --csr <comma separated list of repos>', 'the list of repos is specified as a comma separated list');
+
+program.parse(process.argv);
+const debug = program.debug; 
+
+const options = program.opts();
+deb(options);
+
+let repoList = options.csr;  
 
 if (!repoList) usage("Provide a comma-separated list of GitHub hosted repos");
+
 if (!shell.which('git')) {
   usage('Sorry, this extension requires git installed!');
 }
@@ -20,28 +48,14 @@ if (!shell.which('gh')) {
 }
 
 const isGitFolder = sh("git rev-parse --is-inside-work-tree");
-console.log(isGitFolder);
+deb("this folder is a git folder? ",isGitFolder);
 
-if (!isGitFolder && !fs.existsSync(".git ]")) {
+if (!isGitFolder || !fs.existsSync(".git")) {
     usage('Sorry, current folder is not the root of a git repo!');
 }
 
 function usage(error) {
-    const help = 
-    `
-    Usage:
 
-    gh-submodule-add '<[org1]/repo1>,...,<[orgN]/repoN>'
-    
-    Execute this command in the project root directory of the repo.
-    This extension adds to the current repo the repos specified in the comma separated list 
-    'org1/repo1, org2/repo2', etc as git submodules of the current repo. 
-    - If some org as  'org1' is not specified, it is assumed to be  the 
-      same organization of the current repo.
-    - If one of the repos doesn't exist, it throw an error.
-
-    If the current repo has no "remote", it  is created one in GitHub with alias "origin"  
-`
     if (error) console.error(`Error!: ${error}`);
     console.log(help)
     if (error) process.exit(1); else process.exit(0);
