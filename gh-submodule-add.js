@@ -60,9 +60,7 @@ function sh(executable, ...args) {
 
 
 const gh = (...args) => sh("gh", ...args);
-
 const git = (...args) => sh("git", ...args);
-
 
 function names2urls(names) {
    let urls = names.map(repoName => gh(`browse -n --repo ${repoName}`));
