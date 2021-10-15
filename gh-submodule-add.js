@@ -39,6 +39,8 @@ function usage(error) {
     - If some org as  'org1' is not specified, it is assumed to be  the 
       same organization of the current repo.
     - If one of the repos does'nt exist, it throw an error.
+
+    If the current repo has no "remote", it  is created one in GitHub with alias "origin"  
 `
     if (error) console.error(`Error!: ${error}`);
     console.log(help)
