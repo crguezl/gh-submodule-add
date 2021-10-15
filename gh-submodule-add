@@ -1,0 +1,35 @@
+#!/bin/bash
+set -e
+
+echo "Hello gh-submodule-add!"
+
+# Snippets to help get started:
+
+# Determine if an executable is in the PATH
+if ! type -p node >/dev/null; then
+   echo "Node not found on the system" >&2
+   exit 1
+fi
+
+# Pass arguments through to another command
+node gh-submodule-add.js "$@" 
+
+# Using the gh api command to retrieve and format information
+# QUERY='
+#   query($endCursor: String) {
+#     viewer {
+#       repositories(first: 100, after: $endCursor) {
+#         nodes {
+#           nameWithOwner
+#           stargazerCount
+#         }
+#       }
+#     }
+#   }
+# '
+# TEMPLATE='
+#   {{- range $repo := .data.viewer.repositories.nodes -}}
+#     {{- printf "name: %s - stargazers: %v\n" $repo.nameWithOwner $repo.stargazerCount -}}
+#   {{- end -}}
+# '
+# exec gh api graphql -f query="${QUERY}" --paginate --template="${TEMPLATE}"
