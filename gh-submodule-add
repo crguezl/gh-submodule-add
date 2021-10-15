@@ -7,8 +7,9 @@ if ! type -p node >/dev/null; then
    exit 1
 fi
 
+SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 # Pass arguments through to another command
-node gh-submodule-add.js "$@" 
+node ${SCRIPT_DIR}/gh-submodule-add.js "$@" 
 
 # Using the gh api command to retrieve and format information
 # QUERY='

@@ -18,6 +18,11 @@ if (!shell.which('gh')) {
     usage('Sorry, this extension requires GitHub Cli (gh) installed!');
 }
 
+const isGitFolder = sh("git rev-parse --is-inside-work-tree");
+if (!isGitFolder) {
+    usage('Sorry, current folder is not a git repo!');
+}
+
 function usage(error) {
     const help = 
     `
@@ -47,9 +52,11 @@ function sh(executable, ...args) {
     return result.stdout;
 }
 
+
 const gh = (...args) => sh("gh", ...args);
 
 const git = (...args) => sh("echo git", ...args);
+
 
 function names2urls(names) {
    let urls = names.map(repoName => gh(`browse -n --repo ${repoName}`));
