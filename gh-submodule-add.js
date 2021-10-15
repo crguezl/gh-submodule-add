@@ -9,15 +9,14 @@ const { Command } = require('commander');
 
 const help = 
 `
-gh-submodule-add -c '<[org1]/repo1>,...,<[orgN]/repoN>'
+gh-submodule-add <options>
 
-Execute this command in the project root directory of the repo.
-This extension adds to the current repo the repos specified in the comma separated list 
-'org1/repo1, org2/repo2', etc as git submodules of the current repo. 
-- If some org as  'org1' is not specified, it is assumed to be  the 
-  same organization of the current repo.
-- If one of the repos doesn't exist, it throw an error.
-- If the current repo has no "remote", it  is created one in GitHub with alias "origin"  
+  gh-submodule-add -c '<[org1]/repo1>,...,<[orgN]/repoN>'
+
+    Execute this command in the project root directory of the repo.
+    This extension adds to the current repo the repos specified in the comma separated list 
+    'org1/repo1,org2/repo2', etc as git submodules of the current repo. 
+    - If one of the 'org/repo' repos doesn't exist, it throws an error.
 `
 
 const program = new Command();
@@ -27,18 +26,16 @@ program
   .usage(help)
   .option('-d, --debug', 'output extra debugging')
   .option('-s, --search <query>', 'search <query >using GitHub Syntax')
-  .option('-r, --reg <regexp>', 'filter <query> results using <regexp>. Implies -s')
-  .option('-c, --csr <comma separated list of repos>', 'the list of repos is specified as a comma separated list');
+  .option('-r, --regexp <regexp>', 'filter <query> results using <regexp>')
+  .option('-c, --csr <comma separated list of repos>', 'the list of repos is specified as a comma separated list')
+  .option('-f, --file <file>', 'file with the list of repos, one per line')
+  .option('-n --dryrun','just show what repos will be added as submodules');
 
 program.parse(process.argv);
 const debug = program.debug; 
 
 const options = program.opts();
 deb(options);
-
-let repoList = options.csr;  
-
-if (!repoList) usage("Provide a comma-separated list of GitHub hosted repos");
 
 if (!shell.which('git')) {
   usage('Sorry, this extension requires git installed!');
@@ -81,8 +78,32 @@ function names2urls(names) {
    return urls.map(u => u.replace(/\n$/, '.git'));
 }
 
+let repoList;
+
+debugger;
+if (options.csr) 
+  repoList = options.csr;
+else if (options.file) {
+    deb("options file ", options.file);
+    repoList = fs.readFileSync(options.file, "utf-8")
+      .replace(/\s*$/,"") // trim
+      .replace(/^\n*/,"")
+      .replace(/\n+/g,",")
+}
+deb(repoList)
+
 let repos = repoList.split(/\s*,\s*/);
+if (options.regexp) {
+    let regexp = new RegExp(options.regexp,'i');
+    repos = repos.filter(rn => regexp.test(rn));
+}
+
 deb(repos)
+
+if (options.dryrun) {
+    console.log(repos.join("\n"));
+    process.exit(0);
+}
 
 let urls = names2urls(repos);
 deb(urls);
