@@ -38,7 +38,7 @@ function usage(error) {
     'org1/repo1, org2/repo2', etc as git submodules of the current repo. 
     - If some org as  'org1' is not specified, it is assumed to be  the 
       same organization of the current repo.
-    - If one of the repos does'nt exist, it throw an error.
+    - If one of the repos doesn't exist, it throw an error.
 
     If the current repo has no "remote", it  is created one in GitHub with alias "origin"  
 `
