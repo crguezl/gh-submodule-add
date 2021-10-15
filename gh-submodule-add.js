@@ -1,5 +1,5 @@
 const ins = require("util").inspect;
-const debug = true; 
+const debug = false; 
 const deb = (...args) => { 
     if (debug) console.log(ins(...args, {depth: null})); 
 };
@@ -36,16 +36,20 @@ function usage(error) {
     if (error) process.exit(1); else process.exit(0);
 }
 
-function gh(...args) {
-    let command = `gh ${args.join('')}`;
+function sh(executable, ...args) {
+    let command = `${executable} ${args.join('')}`;
     deb(command);
-    let result = shell.exec(command, {silent: true});
+    let result = shell.exec(command, {silent: false});
     if (result.code !== 0) {
-      shell.echo(`Error: Command "gh ${command}" failed\n${result.stderr}`);
+      shell.echo(`Error: Command "${command}" failed\n${result.stderr}`);
       shell.exit(result.code);
     }    
     return result.stdout;
 }
+
+const gh = (...args) => sh("gh", ...args);
+
+const git = (...args) => sh("echo git", ...args);
 
 function names2urls(names) {
    let urls = names.map(repoName => gh(`browse -n --repo ${repoName}`));
@@ -57,3 +61,8 @@ deb(repos)
 
 let urls = names2urls(repos);
 deb(urls);
+
+urls.forEach(remote => {
+    // deb(`git submodule add ${remote}`);
+    git('submodule add '+remote);
+});

@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/crguezl/gh-submodule-add.git"
   },
-  "keywords": [],
+  "keywords": ["gh-extension"],
   "author": "Casiano Rodriguez Leon <crguezl@ull.edu.es> (https://crguezl.github.io/)",
   "license": "ISC",
   "bugs": {
