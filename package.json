@@ -1,0 +1,23 @@
+{
+  "name": "gh-submodule-add",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gh-submodule-add.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crguezl/gh-submodule-add.git"
+  },
+  "keywords": [],
+  "author": "Casiano Rodriguez Leon <crguezl@ull.edu.es> (https://crguezl.github.io/)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/crguezl/gh-submodule-add/issues"
+  },
+  "homepage": "https://github.com/crguezl/gh-submodule-add#readme",
+  "dependencies": {
+    "shelljs": "^0.8.4"
+  }
+}
