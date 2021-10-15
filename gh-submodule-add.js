@@ -19,8 +19,9 @@ if (!shell.which('gh')) {
 }
 
 const isGitFolder = sh("git rev-parse --is-inside-work-tree");
-if (!isGitFolder) {
-    usage('Sorry, current folder is not a git repo!');
+console.log(isGitFolder);
+if (!isGitFolder && sh('[ -d .git ]')) {
+    usage('Sorry, current folder is not the root of a git repo!');
 }
 
 function usage(error) {
