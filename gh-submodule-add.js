@@ -68,7 +68,7 @@ function usage(error) {
 function sh(executable, ...args) {
     let command = `${executable} ${args.join('')}`;
     deb(command);
-    let result = shell.exec(command, {silent: false});
+    let result = shell.exec(command, {silent: true});
     if (result.code !== 0) {
       shell.echo(`Error: Command "${command}" failed\n${result.stderr}`);
       shell.exit(result.code);
@@ -87,7 +87,9 @@ function names2urls(names) {
 
 function getOrgFromRepo() {
     try {
-        return gh("remote get-url --push origin")
+        let result = shell.exec("git remote get-url --push origin", {silent: true});
+        if (result.code !== 0) return false;
+        return result.stdout
            .replace(/^.*:/,'')
            .replace(/\/.*$/,'')
     } catch(e) {
