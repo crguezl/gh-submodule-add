@@ -140,6 +140,6 @@ let urls = names2urls(repos);
 deb(urls);
 
 urls.forEach(remote => {
-    // deb(`git submodule add ${remote}`);
+    console.log(`git submodule add ${remote}`);
     git('submodule add '+remote);
 });
