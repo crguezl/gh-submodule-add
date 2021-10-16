@@ -91,7 +91,7 @@ function getOrgFromRepo() {
         if (result.code !== 0) return false;
         return result.stdout
            .replace(/^.*:/,'')
-           .replace(/\/.*$/,'')
+           .replace(/\/(.|\n)*$/,'')
     } catch(e) {
       return false;
     }
@@ -131,6 +131,7 @@ if (org) {
 deb(repos)
 
 if (options.dryrun) {
+    console.log("These repos will be aded as submodules:")
     console.log(repos.join("\n"));
     process.exit(0);
 }
