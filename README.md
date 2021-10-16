@@ -1,3 +1,9 @@
+## Installation
+
+```
+gh extension install crguezl/gh-submodule-add
+```
+
 ## Usage
 
 ```
