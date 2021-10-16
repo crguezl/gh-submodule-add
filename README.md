@@ -1,3 +1,4 @@
+## Usage
 
 ```
 Usage: gh-submodule-add 
@@ -28,3 +29,7 @@ Options:
   -o --org <org>                             default organization or user
   -h, --help                                 display help for command
 ```
+
+## Examples
+
+* Examples in repo [crguezl/test-gh-submodule-add](https://github.com/crguezl/test-gh-submodule-add)
