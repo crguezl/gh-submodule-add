@@ -31,7 +31,7 @@ program.version(require('./package.json').version);
 program
   .usage(help)
   .option('-d, --debug', 'output extra debugging')
-  .option('-s, --search <query>', 'search <query >using GitHub Syntax')
+  .option('-s, --search <query>', "search <query> using GitHub Syntax")
   .option('-r, --regexp <regexp>', 'filter <query> results using <regexp>')
   .option('-c, --csr <comma separated list of repos>', 'the list of repos is specified as a comma separated list')
   .option('-f, --file <file>', 'file with the list of repos, one per line')
@@ -88,29 +88,63 @@ function names2urls(names) {
    return urls.map(u => u.replace(/\n$/, '.git'));
 }
 
-function getOrgFromRepo() {
+function getUserLogin() {
     try {
-        let result = shell.exec("git remote get-url --push origin", {silent: true});
+        let result = gh(`api 'user' --jq .login`); 
+
         if (result.code !== 0) return false;
-        return result.stdout
-           .replace(/^.*:/,'')
-           .replace(/\/(.|\n)*$/,'')
+        return result.stdout;
     } catch(e) {
       return false;
     }
 }
 
+function getRepoListFromAPISearch(search, org) {
+  console.log(`search string = ${search}`);
+  console.log(`org = ${org}`);
+  // throw("Search option not implemented yet!");
+  let jqQuery;
+  let query;
+  
+  if (search !== ".") {
+    query = `search/repositories?q=org%3A${org}`;
+    query +=`%20${encodeURIComponent(search)}`;  
+    jqQuery ='.items | .[].full_name';
+  } else {
+    /* Or get all repos */
+    if (gh(`api "users/${org}" -q '.type'`).match(/Organization/i)) {
+      query = `orgs/${org}/repos`;
+    }
+    else
+      query = `users/${org}/repos`;
+      jqQuery='.[].full_name'
+  }
+
+  let command = `api --paginate "${query}" -q "${jqQuery}"`;
+  console.log(`command = ${command}`);
+  let repos = gh(command);
+  console.log(repos);
+  return repos.split(/\s+/).join(",");
+}
+
 let repoList;
 
 debugger;
+
+let org = options.org || process.env["GITHUB_ORG"] || getUserLogin();
 if (options.csr) 
   repoList = options.csr;
 else if (options.file) {
-    deb("options file ", options.file);
-    repoList = fs.readFileSync(options.file, "utf-8")
-      .replace(/\s*$/,"") // trim
-      .replace(/^\n*/,"")
-      .replace(/\n+/g,",")
+  deb("options file ", options.file);
+  repoList = fs.readFileSync(options.file, "utf-8")
+    .replace(/\s*$/,"") // trim
+    .replace(/^\n*/,"")
+    .replace(/\n+/g,",")
+} else if (options.search) {
+  repoList = getRepoListFromAPISearch(options.search, org);
+}
+else {
+  usage("Provide one of the options '-s', '-f' or '-c'");
 }
 deb(repoList)
 
@@ -120,7 +154,6 @@ if (options.regexp) {
     repos = repos.filter(rn => regexp.test(rn));
 }
 
-let org = options.org || process.env["GITHUB_ORG"] || getOrgFromRepo();
 const LegalGHRepoNames = /^(?:([\p{Letter}\p{Number}._-]+)\/)?([\p{Letter}\p{Number}._-]+)$/ui;
 if (org) {
     repos = repos.map(r => {
