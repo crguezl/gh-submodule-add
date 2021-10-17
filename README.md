@@ -34,6 +34,8 @@ Options:
   -n --dryrun                                just show what repos will be added as submodules
   -o --org <org>                             default organization or user
   -h, --help                                 display help for command
+
+The environment variable `GITHUB_ORG` sets the default organization/user
 ```
 
 ## Examples

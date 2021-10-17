@@ -62,6 +62,9 @@ function usage(error) {
 
     if (error) console.error(`Error!: ${error}`);
     console.log(help)
+    console.log(`
+Environment variable GITHUB_ORG sets the default organization/user
+`)
     if (error) process.exit(1); else process.exit(0);
 }
 
@@ -118,12 +121,11 @@ if (options.regexp) {
 }
 
 let org = options.org || process.env["GITHUB_ORG"] || getOrgFromRepo();
-
-const LegalGHRepoNames = /(?:([\p{Letter}\p{Number}._-]+)\/)?([\p{Letter}\p{Number}._-]+)/;
-
+const LegalGHRepoNames = /^(?:([\p{Letter}\p{Number}._-]+)\/)?([\p{Letter}\p{Number}._-]+)$/ui;
 if (org) {
     repos = repos.map(r => {
       let m = LegalGHRepoNames.exec(r);
+      //console.log(`LegalGHRepoNames matching = ${m}`);
       if (!m[1]) r = org+"/"+r;
       return r;
     })
