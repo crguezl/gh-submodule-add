@@ -127,13 +127,9 @@ function getRepoListFromAPISearch(search, org) {
 
   let result = repos.split(/\s+/);
   
-  console.log(result);
-
-  
+   
   result = result.join(",");
 
-  console.log(result);
-  // process.exit(0);
   return result;
 }
 
@@ -169,9 +165,9 @@ if (org) {
     repos = repos.map(r => {
       let m = LegalGHRepoNames.exec(String(r));
       //console.log(`LegalGHRepoNames matching = ${m}`);
-      if (m) 
+      if (m) {
         if (!m[1]) r = org+"/"+r;
-      else 
+      } else 
         showError(`The repo '${r}' does not matches the pattern 'OrganizationName/repoName'`)
       return r;
     })
