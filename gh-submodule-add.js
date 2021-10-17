@@ -7,16 +7,11 @@ const fs = require("fs");
 const shell = require('shelljs');
 const { Command } = require('commander');
 
-const help = 
-`
-gh submodule-add <options>
-`
-
 const program = new Command();
 program.version(require('./package.json').version);
 
 program
-  .usage(help)
+  .name("gh submodule-add")
   .option('-d, --debug', 'output extra debugging')
   .option('-s, --search <query>', "search <query> using GitHub Search API. A dot '.' refers to all the repos")
   .option('-r, --regexp <regexp>', 'filter <query> results using <regexp>')
@@ -26,7 +21,10 @@ program
   .option('-o --org <org>', 'default organization or user');
 
 program.addHelpText('after', `
-  You can set the default organization through the GITHUB_ORG environment variable`
+  - You can set the default organization through the GITHUB_ORG environment variable
+  - When using the option '-s', a dot '.' refers to all the repos
+  - Use of one and only one of the options '-s' or '-c'  or '-f' it is required
+`
 );
   
 
@@ -40,16 +38,16 @@ const options = program.opts();
 deb(options);
 
 if (!shell.which('git')) {
-  usage('Sorry, this extension requires git installed!');
+  showError('Sorry, this extension requires git installed!');
 }
 if (!shell.which('gh')) {
-    usage('Sorry, this extension requires GitHub Cli (gh) installed!');
+    showError('Sorry, this extension requires GitHub Cli (gh) installed!');
 }
 
 const isGitFolder = sh("git rev-parse --is-inside-work-tree");
 
 if (!isGitFolder || !fs.existsSync(".git")) {
-    usage('Sorry, current folder is not the root of a git repo!');
+    showError('Sorry, current folder is not the root of a git repo!');
 }
 
 function showError(error) {
@@ -57,11 +55,8 @@ function showError(error) {
   if (error) process.exit(1); 
  
 }
-function usage(error) {
-
-    if (error) console.error(`Error!: ${error}`);
-    if (error) process.exit(1); 
-    console.log(help)
+function usage() {
+    //console.log(help)
     console.log(`
     If the option '-s .' ( a dot) is used all the repos inside the organization will be used.
     Constrain the result using the option '-r <regexp>'
@@ -150,7 +145,7 @@ else if (options.file) {
   repoList = getRepoListFromAPISearch(options.search, org);
 }
 else {
-  usage("Provide one of the options '-s', '-f' or '-c'");
+  showError("Provide one of the options '-s', '-f' or '-c'");
 }
 deb(repoList)
 
