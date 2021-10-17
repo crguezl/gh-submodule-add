@@ -52,6 +52,11 @@ if (!isGitFolder || !fs.existsSync(".git")) {
     usage('Sorry, current folder is not the root of a git repo!');
 }
 
+function showError(error) {
+  if (error) console.error(`Error!: ${error}`);
+  if (error) process.exit(1); 
+ 
+}
 function usage(error) {
 
     if (error) console.error(`Error!: ${error}`);
@@ -98,8 +103,6 @@ function getUserLogin() {
 }
 
 function getRepoListFromAPISearch(search, org) {
-  console.log(`search string = ${search}`);
-  console.log(`org = ${org}`);
   // throw("Search option not implemented yet!");
   let jqQuery;
   let query;
@@ -119,10 +122,19 @@ function getRepoListFromAPISearch(search, org) {
   }
 
   let command = `api --paginate "${query}" -q "${jqQuery}"`;
-  console.log(`command = ${command}`);
-  let repos = gh(command);
-  console.log(repos);
-  return repos.split(/\s+/).join(",");
+
+  let repos = gh(command).replace(/\s+$/,'').replace(/^\s+/,'');
+
+  let result = repos.split(/\s+/);
+  
+  console.log(result);
+
+  
+  result = result.join(",");
+
+  console.log(result);
+  // process.exit(0);
+  return result;
 }
 
 let repoList;
@@ -155,9 +167,12 @@ if (options.regexp) {
 const LegalGHRepoNames = /^(?:([\p{Letter}\p{Number}._-]+)\/)?([\p{Letter}\p{Number}._-]+)$/ui;
 if (org) {
     repos = repos.map(r => {
-      let m = LegalGHRepoNames.exec(r);
+      let m = LegalGHRepoNames.exec(String(r));
       //console.log(`LegalGHRepoNames matching = ${m}`);
-      if (!m[1]) r = org+"/"+r;
+      if (m) 
+        if (!m[1]) r = org+"/"+r;
+      else 
+        showError(`The repo '${r}' does not matches the pattern 'OrganizationName/repoName'`)
       return r;
     })
 }
