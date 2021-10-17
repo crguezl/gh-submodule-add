@@ -30,8 +30,6 @@ program.addHelpText('after', `
 
 program.parse(process.argv);
 
-
-
 const debug = program.debug; 
 
 const options = program.opts();
@@ -55,6 +53,7 @@ function showError(error) {
   if (error) process.exit(1); 
  
 }
+
 function usage() {
     //console.log(help)
     console.log(`
@@ -121,7 +120,6 @@ function getRepoListFromAPISearch(search, org) {
   let repos = gh(command).replace(/\s+$/,'').replace(/^\s+/,'');
 
   let result = repos.split(/\s+/);
-  
    
   result = result.join(",");
 
