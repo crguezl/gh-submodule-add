@@ -10,20 +10,7 @@ const { Command } = require('commander');
 const help = 
 `
 gh submodule-add <options>
-
-  gh submodule-add -c '<[org1]/repo1>,...,<[orgN]/repoN>'
-
-    Execute this command in the project root directory of the repo.
-    This extension adds to the current repo the repos specified in the 
-    comma separated list 
-    'org1/repo1,org2/repo2', etc as git submodules of the current repo. 
-    - If one of the 'org/repo' repos doesn't exist, it throws an error.
-
-  gh submodule-add -f file
-    
-    The file has to have a repo per line
-
-    `
+`
 
 const program = new Command();
 program.version(require('./package.json').version);
@@ -31,14 +18,22 @@ program.version(require('./package.json').version);
 program
   .usage(help)
   .option('-d, --debug', 'output extra debugging')
-  .option('-s, --search <query>', "search <query> using GitHub Syntax")
+  .option('-s, --search <query>', "search <query> using GitHub Search API. A dot '.' refers to all the repos")
   .option('-r, --regexp <regexp>', 'filter <query> results using <regexp>')
   .option('-c, --csr <comma separated list of repos>', 'the list of repos is specified as a comma separated list')
   .option('-f, --file <file>', 'file with the list of repos, one per line')
   .option('-n --dryrun','just show what repos will be added as submodules')
   .option('-o --org <org>', 'default organization or user');
 
+program.addHelpText('after', `
+  You can set the default organization through the GITHUB_ORG environment variable`
+);
+  
+
 program.parse(process.argv);
+
+
+
 const debug = program.debug; 
 
 const options = program.opts();
@@ -52,7 +47,6 @@ if (!shell.which('gh')) {
 }
 
 const isGitFolder = sh("git rev-parse --is-inside-work-tree");
-deb("this folder is a git folder? ",isGitFolder);
 
 if (!isGitFolder || !fs.existsSync(".git")) {
     usage('Sorry, current folder is not the root of a git repo!');
@@ -61,11 +55,15 @@ if (!isGitFolder || !fs.existsSync(".git")) {
 function usage(error) {
 
     if (error) console.error(`Error!: ${error}`);
+    if (error) process.exit(1); 
     console.log(help)
     console.log(`
-Environment variable GITHUB_ORG sets the default organization/user
+    If the option '-s .' ( a dot) is used all the repos inside the organization will be used.
+    Constrain the result using the option '-r <regexp>'
+
+    Environment variable GITHUB_ORG sets the default organization/user
 `)
-    if (error) process.exit(1); else process.exit(0);
+  process.exit(0);
 }
 
 function sh(executable, ...args) {
