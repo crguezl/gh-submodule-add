@@ -184,7 +184,7 @@ urls.forEach(remote => {
       console.log(`git submodule add ${remote}`);
       git('submodule add '+remote);
     } catch(e) {
-      console.log(`Skipping repo ${remote} because:\n${e}\n\n`)
+      console.log(`Skipping to add repo ${remote} because:\n${e}\n\n`)
     }
 
 });
