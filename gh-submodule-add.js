@@ -76,12 +76,23 @@ function sh(executable, ...args) {
       shell.echo(`Error: Command "${command}" failed\n${result.stderr}`);
       shell.exit(result.code);
     }    
-    return result.stdout;
+    return result.stdout.replace(/\s+$/,'');
+}
+
+function shContinue(executable, ...args) {
+  let command = `${executable} ${args.join('')}`;
+  deb(command);
+  let result = shell.exec(command, {silent: true});
+  if (result.code !== 0) {
+    shell.echo(`Error: Command "${command}" failed\n${result.stderr}`);
+  }    
+  return result.stdout.replace(/\s+$/,'');
 }
 
 
 const gh = (...args) => sh("gh", ...args);
-const git = (...args) => sh("git", ...args);
+const ghCont = (...args) => sh("gh", ...args);
+// const git = (...args) => sh("git", ...args);
 
 function names2urls(names) {
    let urls = names.map(repoName => gh(`browse -n --repo ${repoName}`));
@@ -129,6 +140,27 @@ function getRepoListFromAPISearch(search, org) {
   return result;
 }
 
+function getNumberOfCommits(ownerSlashRepo) {
+  let [owner, repo] = ownerSlashRepo.split('/');
+  // console.log(owner, repo);
+  const queryNumberOfCommits = `'
+  query {
+    repository(owner:"${owner}", name:"${repo}") {
+      object(expression:"main") {
+        ... on Commit {
+          history {
+            totalCount
+          }
+        }
+      }
+    }
+  }'`
+  return ghCont(`api graphql --paginate -f query=${queryNumberOfCommits} --jq .[].[].[].[].[]`)
+}
+
+// console.log(getNumberOfCommits("ULL-MII-SYTWS-2122/asyncmap-crguezl"))
+// process.exit(0);
+
 let repoList;
 
 debugger;
@@ -151,6 +183,7 @@ else {
 deb(repoList)
 
 let repos = repoList.split(/\s*,\s*/);
+
 if (options.regexp) {
     let regexp = new RegExp(options.regexp,'i');
     repos = repos.filter(rn => regexp.test(rn));
@@ -172,7 +205,16 @@ deb(repos)
 
 if (options.dryrun) {
     console.log("These repos will be aded as submodules:")
-    console.log(repos.join("\n"));
+    console.log("Repository : Number of Commits")
+
+    // console.log(repos);
+
+    repos.forEach(r => {
+      let nc = getNumberOfCommits(r);
+      // let nc = 0;
+      console.log(`${r}: ${nc}`);
+    });
+    
     process.exit(0);
 }
 
@@ -182,7 +224,12 @@ deb(urls);
 urls.forEach(remote => {
     try {
       console.log(`git submodule add ${remote}`);
-      git('submodule add '+remote);
+      let result = shell.exec('git submodule add '+remote, {silent: false});
+      if ((result.code !== 0) || result.error) {
+        shell.echo(`Error: Command "${command}" failed\n${result.stderr}`);
+        console.log(`Skipping to add repo ${remote}!\n\n`)
+      }    
+   
     } catch(e) {
       console.log(`Skipping to add repo ${remote} because:\n${e}\n\n`)
     }

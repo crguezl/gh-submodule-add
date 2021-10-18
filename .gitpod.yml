@@ -1,0 +1,13 @@
+# List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
+image:
+  file: .gitpod.Dockerfile
+
+tasks:
+  - init: | # See https://community.gitpod.io/t/issues-with-multiple-startup-tasks-using-gitpod-yml/2556
+      export GITHUB_TOKEN=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
+      eval "$(gh completion -s bash)" # runs during prebuild
+
+# List the ports to expose. Learn more https://www.gitpod.io/docs/config-ports/
+ports:
+  - port: 3000
+    onOpen: open-preview
