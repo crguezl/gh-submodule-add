@@ -29,3 +29,7 @@ Options:
 ## Examples
 
 * Examples in repo [crguezl/test-gh-submodule-add](https://github.com/crguezl/test-gh-submodule-add)
+
+## See also
+
+* [gh extension to remove submodules](https://github.com/crguezl/gh-submodule-rm/blob/main/gh-submodule-rm)

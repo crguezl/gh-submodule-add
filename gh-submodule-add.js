@@ -89,9 +89,19 @@ function shContinue(executable, ...args) {
   return result.stdout.replace(/\s+$/,'');
 }
 
+function shStderr(executable, ...args) {
+  
+  let command = `${executable} ${args.join('')}`;
+  // console.log(command);
+  let result = shell.exec(command, {silent: true});
+  return result.stderr; 
+}
+
 
 const gh = (...args) => sh("gh", ...args);
-const ghCont = (...args) => sh("gh", ...args);
+const ghCont = (...args) => shContinue("gh", ...args);
+const ghCode = (...args) => shStderr("gh", ...args);
+
 // const git = (...args) => sh("git", ...args);
 
 function names2urls(names) {
@@ -155,11 +165,22 @@ function getNumberOfCommits(ownerSlashRepo) {
       }
     }
   }'`
-  return ghCont(`api graphql --paginate -f query=${queryNumberOfCommits} --jq .[].[].[].[].[]`)
+
+  if (RepoIsEmpty(ownerSlashRepo)) {
+     return 0;
+  } else 
+    return ghCont(`api graphql --paginate -f query=${queryNumberOfCommits} --jq .[].[].[].[].[]`)
 }
 
-// console.log(getNumberOfCommits("ULL-MII-SYTWS-2122/asyncmap-crguezl"))
-// process.exit(0);
+function RepoIsEmpty(ownerSlashRepo){
+  let result = ghCode(` api '/repos/${ownerSlashRepo}/contents/'`);
+  //console.log(result);
+  return result.match(/empty.*404/) !== null;
+}
+
+
+//console.log(RepoIsEmpty("ULL-MII-SYTWS-2122/asyncmap-crguezl"));
+//console.log(RepoIsEmpty("ULL-MII-SYTWS-2122/asyncserialize-mstoisor"));
 
 let repoList;
 
@@ -204,7 +225,7 @@ if (org) {
 deb(repos)
 
 if (options.dryrun) {
-    console.log("These repos will be aded as submodules:")
+    console.log("Only repos with more than one commit will be added as submodules:")
     console.log("Repository : Number of Commits")
 
     // console.log(repos);
@@ -221,15 +242,21 @@ if (options.dryrun) {
 let urls = names2urls(repos);
 deb(urls);
 
-urls.forEach(remote => {
+urls.forEach((remote, i) => {
+    let repo = repos[i];
     try {
-      console.log(`git submodule add ${remote}`);
-      let result = shell.exec('git submodule add '+remote, {silent: false});
-      if ((result.code !== 0) || result.error) {
-        shell.echo(`Error: Command "${command}" failed\n${result.stderr}`);
-        console.log(`Skipping to add repo ${remote}!\n\n`)
-      }    
-   
+      let isEmpty = RepoIsEmpty(repo);
+      if (isEmpty) {
+        console.log(`Skipping to add repo ${remote} because is empty!`)
+      }
+      else {
+        console.log(`git submodule add ${remote}`);
+        let result = shell.exec('git submodule add '+remote, {silent: false});
+        if ((result.code !== 0) || result.error) {
+          shell.echo(`Error: Command "${command}" failed\n${result.stderr}`);
+          console.log(`Skipping to add repo ${remote}!\n\n`)
+        }      
+      }
     } catch(e) {
       console.log(`Skipping to add repo ${remote} because:\n${e}\n\n`)
     }
