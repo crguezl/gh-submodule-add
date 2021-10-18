@@ -125,6 +125,10 @@ function getRepoListFromAPISearch(search, org) {
   let jqQuery;
   let query;
   
+  if (!org) {
+    console.error("Aborting. Specify a GitHub organization");
+    process.exit(1);
+  }
   if (search !== ".") {
     query = `search/repositories?q=org%3A${org}`;
     query +=`%20${encodeURIComponent(search)}`;  
@@ -203,6 +207,11 @@ else {
 }
 deb(repoList)
 
+if (repoList.length === 0) {
+  console.log("No matching repos found!");
+  process.exit(0);
+}
+
 let repos = repoList.split(/\s*,\s*/);
 
 if (options.regexp) {
@@ -222,7 +231,6 @@ if (org) {
       return r;
     })
 }
-deb(repos)
 
 if (options.dryrun) {
     console.log("Only repos with more than one commit will be added as submodules:")
