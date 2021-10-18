@@ -208,10 +208,8 @@ else {
 deb(repoList)
 
 if (repoList.length === 0) {
-  console.log("No matching repos found!");
-  process.exit(0);
+  process.exit
 }
-
 let repos = repoList.split(/\s*,\s*/);
 
 if (options.regexp) {
