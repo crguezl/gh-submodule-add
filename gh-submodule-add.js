@@ -44,8 +44,11 @@ if (!shell.which('gh')) {
 
 const isGitFolder = sh("git rev-parse --is-inside-work-tree");
 
-if (!isGitFolder || !fs.existsSync(".git")) {
+console.log(options.dryrun);
+if (!options.dryrun) {
+  if (!isGitFolder || !fs.existsSync(".git")) {
     showError('Sorry, current folder is not the root of a git repo!');
+  }
 }
 
 function showError(error) {
