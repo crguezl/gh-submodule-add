@@ -42,10 +42,10 @@ if (!shell.which('gh')) {
     showError('Sorry, this extension requires GitHub Cli (gh) installed!');
 }
 
-const isGitFolder = sh("git rev-parse --is-inside-work-tree");
 
-console.log(options.dryrun);
 if (!options.dryrun) {
+  const isGitFolder = sh("git rev-parse --is-inside-work-tree");
+
   if (!isGitFolder || !fs.existsSync(".git")) {
     showError('Sorry, current folder is not the root of a git repo!');
   }
@@ -180,6 +180,11 @@ let urls = names2urls(repos);
 deb(urls);
 
 urls.forEach(remote => {
-    console.log(`git submodule add ${remote}`);
-    git('submodule add '+remote);
+    try {
+      console.log(`git submodule add ${remote}`);
+      git('submodule add '+remote);
+    } catch(e) {
+      console.log(`Skipping repo ${remote} because:\n${e}\n\n`)
+    }
+
 });
