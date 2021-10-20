@@ -23,11 +23,12 @@ program
 program.addHelpText('after', `
   - You can set the default organization through the GITHUB_ORG environment variable
   - When using the option '-s', a dot '.' refers to all the repos
+  - Option '-s' works only when all the repos belong to the same org
   - Use of one and only one of the options '-s' or '-c'  or '-f' it is required
+  - The current folder must be the root of a git repo unless option '-n' is used
 `
 );
   
-
 program.parse(process.argv);
 
 const debug = program.debug; 
@@ -52,20 +53,10 @@ if (!options.dryrun) {
 }
 
 function showError(error) {
-  if (error) console.error(`Error!: ${error}`);
-  if (error) process.exit(1); 
- 
-}
-
-function usage() {
-    //console.log(help)
-    console.log(`
-    If the option '-s .' ( a dot) is used all the repos inside the organization will be used.
-    Constrain the result using the option '-r <regexp>'
-
-    Environment variable GITHUB_ORG sets the default organization/user
-`)
-  process.exit(0);
+  if (error) {
+    console.error(`Error!: ${error}`);
+    process.exit(1); 
+  }
 }
 
 function sh(executable, ...args) {
@@ -110,18 +101,11 @@ function names2urls(names) {
 }
 
 function getUserLogin() {
-    try {
-        let result = gh(`api 'user' --jq .login`); 
-
-        if (result.code !== 0) return false;
-        return result.stdout;
-    } catch(e) {
-      return false;
-    }
+   let result = gh(`api 'user' --jq .login`);
+   return result; 
 }
 
 function getRepoListFromAPISearch(search, org) {
-  // throw("Search option not implemented yet!");
   let jqQuery;
   let query;
   
