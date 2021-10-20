@@ -156,11 +156,12 @@ function getRepoListFromAPISearch(search, org) {
 
 function getNumberOfCommits(ownerSlashRepo) {
   let [owner, repo] = ownerSlashRepo.split('/');
+  let defaultBranch = gh(`api /repos/${ownerSlashRepo} --jq .default_branch`);
   // console.log(owner, repo);
   const queryNumberOfCommits = `'
   query {
     repository(owner:"${owner}", name:"${repo}") {
-      object(expression:"main") {
+      object(expression:"${defaultBranch}") {
         ... on Commit {
           history {
             totalCount
@@ -171,9 +172,9 @@ function getNumberOfCommits(ownerSlashRepo) {
   }'`
 
   if (RepoIsEmpty(ownerSlashRepo)) {
-     return 0;
+     return ['no branch', 0];
   } else 
-    return ghCont(`api graphql --paginate -f query=${queryNumberOfCommits} --jq .[].[].[].[].[]`)
+    return [defaultBranch, ghCont(`api graphql --paginate -f query=${queryNumberOfCommits} --jq .[].[].[].[].[]`)]
 }
 
 function RepoIsEmpty(ownerSlashRepo){
@@ -208,8 +209,10 @@ else {
 deb(repoList)
 
 if (repoList.length === 0) {
-  process.exit
+  console.log("No matching repos found!");
+  process.exit(0);
 }
+
 let repos = repoList.split(/\s*,\s*/);
 
 if (options.regexp) {
@@ -232,16 +235,21 @@ if (org) {
 
 if (options.dryrun) {
     console.log("Only repos with more than one commit will be added as submodules:")
-    console.log("Repository : Number of Commits")
 
     // console.log(repos);
 
+    console.log("[");
     repos.forEach(r => {
-      let nc = getNumberOfCommits(r);
+      if (RepoIsEmpty(r)) { 
+        console.log(`${r}: 0`);
+        return;
+      }
+      let [db, nc] = getNumberOfCommits(r);
       // let nc = 0;
-      console.log(`${r}: ${nc}`);
+      console.log(`  {"repo": ${r}, "commits": ${nc}}, "default-branch": ${db}`);
     });
-    
+    console.log("]");
+
     process.exit(0);
 }
 
