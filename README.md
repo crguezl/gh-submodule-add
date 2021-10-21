@@ -21,7 +21,7 @@ Options:
   -h, --help                                 display help for command
 ```
 
-- You can set the default organization through the GITHUB_ORG environment variable
+- You can set the default organization through the `GITHUB_ORG` environment variable
 - When using the option `-s`, a dot `'.'` refers to all the repos
 - Use of one and only one of the options `-s` or `-c`  or `-f` it is required
 
