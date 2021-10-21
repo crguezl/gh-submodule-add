@@ -101,6 +101,10 @@ function names2urls(names) {
 }
 
 function getUserLogin() {
+   /* See also 
+      gh auth status -t
+      give us the user and the token
+   */
    let result = gh(`api 'user' --jq .login`);
    return result; 
 }
@@ -157,8 +161,11 @@ function getNumberOfCommits(ownerSlashRepo) {
 
   if (RepoIsEmpty(ownerSlashRepo)) {
      return ['no branch', 0];
-  } else 
-    return [defaultBranch, ghCont(`api graphql --paginate -f query=${queryNumberOfCommits} --jq .[].[].[].[].[]`)]
+  } else {
+    let numCommits =  ghCont(`api graphql --paginate -f query=${queryNumberOfCommits} --jq .[].[].[].[].[]`)
+    return [defaultBranch, numCommits ];
+  }
+    
 }
 
 function RepoIsEmpty(ownerSlashRepo){
@@ -200,8 +207,12 @@ if (repoList.length === 0) {
 let repos = repoList.split(/\s*,\s*/);
 
 if (options.regexp) {
+    //console.log(options.regexp);
     let regexp = new RegExp(options.regexp,'i');
-    repos = repos.filter(rn => regexp.test(rn));
+    //console.log(regexp.source);
+    repos = repos.filter(rn => {
+      return regexp.test(rn)
+    });
 }
 
 const LegalGHRepoNames = /^(?:([\p{Letter}\p{Number}._-]+)\/)?([\p{Letter}\p{Number}._-]+)$/ui;
@@ -218,21 +229,21 @@ if (org) {
 }
 
 if (options.dryrun) {
-    console.log("Only repos with more than one commit will be added as submodules:")
+    console.error("Only repos with more than one commit will be added as submodules:")
 
     // console.log(repos);
 
-    console.log("[");
+    //console.log("[");
     repos.forEach(r => {
       if (RepoIsEmpty(r)) { 
-        console.log(`${r}: 0`);
+        console.console.error(`${r} has no commits`);
         return;
       }
-      let [db, nc] = getNumberOfCommits(r);
+      // let [db, nc] = getNumberOfCommits(r);
       // let nc = 0;
-      console.log(`  {"repo": ${r}, "commits": ${nc}}, "default-branch": ${db}`);
+      console.log(`${r}`);
     });
-    console.log("]");
+    //console.log("]");
 
     process.exit(0);
 }
