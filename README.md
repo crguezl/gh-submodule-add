@@ -65,7 +65,7 @@ git submodule add https://github.com/ULL-MII-SYTWS-2122/asyncmap-PaulaExposito
 Clonando en '/Users/casianorodriguezleon/campus-virtual/2122/sytws2122/practicas-alumnos/asyncmap/asyncmap-PaulaExposito'...
 ```
 
-Let us check they have been added:
+Let us check they have been correctly added:
 
 ```
 ➜  asyncmap git:(master) ✗ git submodule
