@@ -53,7 +53,7 @@ ULL-MII-SYTWS-2122/asyncmap-PaulaExposito
 ULL-MII-SYTWS-2122/asyncmap-alu0100898293
 ```
 
-Let us these as submodules:
+Let us add these to the current repo as submodules:
 
 ```
 ➜  asyncmap git:(master) gh submodule-add -s asyncmap -r 'alu|paula' -o ULL-MII-SYTWS-2122
