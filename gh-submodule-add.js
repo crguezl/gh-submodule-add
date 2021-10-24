@@ -236,7 +236,7 @@ if (options.dryrun) {
     //console.log("[");
     repos.forEach(r => {
       if (RepoIsEmpty(r)) { 
-        console.console.error(`${r} has no commits`);
+        console.error(`${r} has no commits`);
         return;
       }
       // let [db, nc] = getNumberOfCommits(r);
