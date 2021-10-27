@@ -182,6 +182,8 @@ let repoList;
 
 debugger;
 
+if (!options.org && (program.args.length == 1) ) options.org = program.args[0];
+
 let org = options.org || process.env["GITHUB_ORG"] || getUserLogin();
 if (options.csr) 
   repoList = options.csr;
@@ -200,7 +202,7 @@ else {
 deb(repoList)
 
 if (repoList.length === 0) {
-  console.log("No matching repos found!");
+  console.log(`No matching repos found in owner "${org}"!`);
   process.exit(0);
 }
 
