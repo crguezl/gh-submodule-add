@@ -11,7 +11,7 @@ const program = new Command();
 program.version(require('./package.json').version);
 
 program
-  .name("gh submodule-add")
+  .name("gh submodule-add [options] [organization]")
   .option('-d, --debug', 'output extra debugging')
   .option('-s, --search <query>', "search <query> using GitHub Search API. A dot '.' refers to all the repos")
   .option('-r, --regexp <regexp>', 'filter <query> results using <regexp>')
@@ -30,6 +30,7 @@ program.addHelpText('after', `
 );
   
 program.parse(process.argv);
+if (process.argv.length === 2) program.help()
 
 const debug = program.debug; 
 
