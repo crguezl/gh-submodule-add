@@ -46,10 +46,9 @@ if (!shell.which('gh')) {
 
 
 if (!options.dryrun) {
-  const isGitFolder = sh("git rev-parse --is-inside-work-tree");
-
-  if (!isGitFolder || !fs.existsSync(".git")) {
-    showError('Sorry, current folder is not the root of a git repo!');
+  let isGitFolder = shell.exec("git rev-parse --is-inside-work-tree", {silent: true});
+   if (!isGitFolder || !fs.existsSync(".git")) {
+    showError('The current folder must be the root of a git repo when running this command!');
   }
 }
 
@@ -198,7 +197,7 @@ else if (options.file) {
   repoList = getRepoListFromAPISearch(options.search, org);
 }
 else {
-  showError("Provide one of the options '-s', '-f' or '-c'");
+  repoList = getRepoListFromAPISearch('.', org);
 }
 deb(repoList)
 
