@@ -296,7 +296,7 @@ function addSubmodules(urls, repos) {
       }
       else {
         console.log(`git submodule add ${remote}`);
-        let result = shell.exec('git submodule add ' + remote, { silent: false });
+        let result = shell.exec('git submodule add ' + remote, { silent: true });
         if ((result.code !== 0) || result.error) {
           shell.echo(`Error: Command "${command}" failed\n${result.stderr}`);
           console.log(`Skipping to add repo ${remote}!\n\n`)
