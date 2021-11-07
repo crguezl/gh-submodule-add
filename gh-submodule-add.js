@@ -38,21 +38,6 @@ const debug = program.debug;
 const options = program.opts();
 deb(options);
 
-if (!shell.which('git')) {
-  showError('Sorry, this extension requires git installed!');
-}
-if (!shell.which('gh')) {
-    showError('Sorry, this extension requires GitHub Cli (gh) installed!');
-}
-
-
-if (!options.dryrun) {
-  let isGitFolder = shell.exec("git rev-parse --is-inside-work-tree", {silent: true});
-   if (!isGitFolder || !fs.existsSync(".git")) {
-    showError('The current folder must be the root of a git repo when running this command!');
-  }
-}
-
 const { 
   showError, 
   sh, 
@@ -67,6 +52,20 @@ const {
 } = require(path.join(__dirname,'utilities.js'));
 
 
+if (!shell.which('git')) {
+  showError('Sorry, this extension requires git installed!');
+}
+if (!shell.which('gh')) {
+    showError('Sorry, this extension requires GitHub Cli (gh) installed!');
+}
+
+
+if (!options.dryrun) {
+  let isGitFolder = shell.exec("git rev-parse --is-inside-work-tree", {silent: true});
+   if (!isGitFolder || !fs.existsSync(".git")) {
+    showError('The current folder must be the root of a git repo when running this command!');
+  }
+}
 
 console.log(branches("ULL-MFP-AET-2122/aprender-markdown-chloe-boistel-perez-alu0100788020"));
 console.log(branches("ULL-MII-SYTWS-2122/asyncserialize-mstoisor"));
