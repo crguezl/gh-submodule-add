@@ -109,3 +109,28 @@ if (options.dryrun) {
 let urls = names2urls(repos);
 
 addSubmodules(urls, repos);
+
+/* 
+unified graphql request for empty repos download complete of 1 repo
+➜  asyncserialize git:(master) ✗ time gh submodule-add -s asyncserialize -o ULL-MII-SYTWS-2122
+Skipping to add repo https://github.com/ULL-MII-SYTWS-2122/asyncserialize-mstoisor because is empty!
+Skipping to add repo https://github.com/ULL-MII-SYTWS-2122/asyncserialize-lorenaolaru because is empty!
+Skipping to add repo https://github.com/ULL-MII-SYTWS-2122/asyncserialize-crguezl because is empty!
+Skipping to add repo https://github.com/ULL-MII-SYTWS-2122/asyncserialize-ddialar because is empty!
+git submodule add https://github.com/ULL-MII-SYTWS-2122/asyncserialize-alu0101102726
+Clonando en '/Users/casianorodriguezleon/campus-virtual/2122/sytws2122/practicas-alumnos/asyncserialize/asyncserialize-alu0101102726'...
+Skipping to add repo https://github.com/ULL-MII-SYTWS-2122/asyncserialize-PaulaExposito because is empty!
+gh submodule-add -s asyncserialize -o ULL-MII-SYTWS-2122  1,64s user 0,63s system 31% cpu 7,297 total
+
+
+unified graphql request for empty repos -n option. No downloads
+➜  asyncserialize git:(master) ✗ time gh submodule-add -s asyncserialize -o ULL-MII-SYTWS-2122 -n
+Only repos with more than one commit will be added as submodules:
+ULL-MII-SYTWS-2122/asyncserialize-mstoisor is empty!
+ULL-MII-SYTWS-2122/asyncserialize-lorenaolaru is empty!
+ULL-MII-SYTWS-2122/asyncserialize-crguezl is empty!
+ULL-MII-SYTWS-2122/asyncserialize-ddialar is empty!
+ULL-MII-SYTWS-2122/asyncserialize-alu0101102726
+ULL-MII-SYTWS-2122/asyncserialize-PaulaExposito is empty!
+gh submodule-add -s asyncserialize -o ULL-MII-SYTWS-2122 -n  0,39s user 0,15s system 26% cpu 2,040 total
+*/
