@@ -78,29 +78,39 @@ function getRepoListFromAPISearch(search, org) {
     console.error("Aborting. Specify a GitHub organization");
     process.exit(1);
   }
-  if (search !== ".") {
-    query = `search/repositories?q=org%3A${org}`;
-    query += `%20${encodeURIComponent(search)}`;
-    jqQuery = '.items | .[].full_name';
-  } else {
-    /* Or get all repos */
-    if (gh(`api "users/${org}" -q '.type'`).match(/Organization/i)) {
-      query = `orgs/${org}/repos`;
+
+  try {
+    if (search !== ".") {
+      query = `search/repositories?q=org%3A${org}`;
+      query += `%20${encodeURIComponent(search)}`;
+      jqQuery = '.items | .[].full_name';
+    } else {
+      /* Or get all repos */
+      if (gh(`api "users/${org}" -q '.type'`).match(/Organization/i)) {
+        query = `orgs/${org}/repos`;
+      }
+      else
+        query = `users/${org}/repos`;
+      jqQuery = '.[].full_name'
     }
-    else
-      query = `users/${org}/repos`;
-    jqQuery = '.[].full_name'
+  
+    let command = `gh api --paginate "${query}" -q "${jqQuery}"`;
+    let queryResult = shell.exec(command, { silent: true });
+    if (queryResult.code !== 0 || queryResult.length === 0) {
+      console.error(`No repos found in org "${org}" matching query "${search}"`)
+      process.exit(1);
+    }
+    let repos = queryResult.stdout.replace(/\s+$/, '').replace(/^\s+/, '');
+  
+    let result = repos.split(/\s+/);
+  
+    result = result.join(",");
+  
+    return result;
+  } catch (error) {
+    console.error(`No repos found in org "${org}" matching query "${search}"`)
   }
 
-  let command = `api --paginate "${query}" -q "${jqQuery}"`;
-
-  let repos = gh(command).replace(/\s+$/, '').replace(/^\s+/, '');
-
-  let result = repos.split(/\s+/);
-
-  result = result.join(",");
-
-  return result;
 }
 exports.getRepoListFromAPISearch = getRepoListFromAPISearch;
 
