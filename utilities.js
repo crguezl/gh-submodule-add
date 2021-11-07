@@ -285,10 +285,13 @@ function addImplicitOrgIfNeeded(repos, org) {
 exports.addImplicitOrgIfNeeded = addImplicitOrgIfNeeded;
 
 function addSubmodules(urls, repos) {
+  //console.log(repos);
+  let nb = numBranches(repos)
+  
   urls.forEach((remote, i) => {
     let repo = repos[i];
     try {
-      let isEmpty = RepoIsEmpty(repo);
+      let isEmpty = nb[i] === 0;
       if (isEmpty) {
         console.log(`Skipping to add repo ${remote} because is empty!`)
       }
