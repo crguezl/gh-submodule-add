@@ -250,4 +250,9 @@ Clonando en '/Users/casianorodriguezleon/campus-virtual/2122/aet2122/practicas-a
 git submodule add https://github.com/ULL-MFP-AET-2122/gitpod-template
 Clonando en '/Users/casianorodriguezleon/campus-virtual/2122/aet2122/practicas-alumnos/aprender-markdown/gitpod-template'...
 gh submodule-add -s 'aprender-markdown' --org ULL-MFP-AET-2122  5,96s user 3,25s system 27% cpu 33,934 total
+
+
+## Parallel clone and graphql unified
+
+16 repos gh submodule-add -s aprender-markdown --org ULL-MFP-AET-2122  4,30s user 2,87s system 57% cpu 12,540 total
 */

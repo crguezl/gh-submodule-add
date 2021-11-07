@@ -5,6 +5,11 @@ const deb = (...args) => {
 };
 const fs = require("fs");
 const shell = require('shelljs');
+const path = require('path');
+const maxProcesses = 8;
+
+const concurrently = path.join(__dirname, 'node_modules', '.bin', 'concurrently');
+//console.log(concurrently);
 
 function showError(error) {
   if (error) {
@@ -55,7 +60,7 @@ exports.ghCode = ghCode;
 
 function names2urls(names) {
   let urls = names.map(repoName => gh(`browse -n --repo ${repoName}`));
-  return urls.map(u => u.replace(/\n$/, '.git'));
+  return urls.map(u => u.replace(/\s*$/, '.git'));
 }
 exports.names2urls = names2urls;
 
@@ -93,7 +98,7 @@ function getRepoListFromAPISearch(search, org) {
         query = `users/${org}/repos`;
       jqQuery = '.[].full_name'
     }
-  
+
     let command = `gh api --paginate "${query}" -q "${jqQuery}"`;
     let queryResult = shell.exec(command, { silent: true });
     if (queryResult.code !== 0 || queryResult.length === 0) {
@@ -101,11 +106,11 @@ function getRepoListFromAPISearch(search, org) {
       process.exit(1);
     }
     let repos = queryResult.stdout.replace(/\s+$/, '').replace(/^\s+/, '');
-  
+
     let result = repos.split(/\s+/);
-  
+
     result = result.join(",");
-  
+
     return result;
   } catch (error) {
     console.error(`No repos found in org "${org}" matching query "${search}"`)
@@ -189,7 +194,7 @@ exports.branches = branches;
 
 function numBranches(ownerSlashRepo) {
   let splitted = ownerSlashRepo.map(r => r.split('/'));
-  let alias = splitted.map(r => r[1]).map(r => r.replace(/[.-]/g,'_'));
+  let alias = splitted.map(r => r[1]).map(r => r.replace(/[.-]/g, '_'));
 
   let query = (alias, orgName, repoName) => {
     return `
@@ -225,7 +230,7 @@ function numBranches(ownerSlashRepo) {
   result = ghCont(queryS)
   result = JSON.parse(result);
 
-  let branchesLengths = alias.map((a,i) => result.data[a].repository.refs.edges.length)
+  let branchesLengths = alias.map((a, i) => result.data[a].repository.refs.edges.length)
   return branchesLengths;
 
 }
@@ -259,7 +264,7 @@ function getRepoList(options, org) {
   else {
     repos = getRepoListFromAPISearch('.', org);
   }
-  repos = repos.length? repos.split(/\s*,\s*/) : [];
+  repos = repos.length ? repos.split(/\s*,\s*/) : [];
   repos = addImplicitOrgIfNeeded(repos, org);
 
   return repos;
@@ -276,7 +281,7 @@ function addImplicitOrgIfNeeded(repos, org) {
       if (m) {
         if (!m[1]) r = org + "/" + r;
       } else
-        showError(`The repo '${r}' does not matches the pattern 'OrganizationName/repoName'`)
+        showError(`The repofnames2 '${r}' does not matches the pattern 'OrganizationName/repoName'`)
       return r;
     })
   }
@@ -287,24 +292,41 @@ exports.addImplicitOrgIfNeeded = addImplicitOrgIfNeeded;
 function addSubmodules(urls, repos) {
   //console.log(repos);
   let nb = numBranches(repos)
-  
-  urls.forEach((remote, i) => {
-    try {
+  let par = concurrently + ' ';
+
+  console.log(`cloning in parallel ...`);
+  urls.forEach(
+    (url, i) => {
       let isEmpty = nb[i] === 0;
       if (isEmpty) {
-        console.log(`Skipping to add repo ${remote} because is empty!`)
+        console.log(`Skipping to add repo ${url} because is empty!`)
       }
       else {
-        console.log(`git submodule add ${remote}`);
-        let result = shell.exec('git submodule add ' + remote, { silent: true });
+        par += ` "git clone ${url}"`;
+      }
+    })
+  console.log(par);
+  let result = shell.exec(par, { silent: true });
+  if (result.code !== 0) {
+    console.error(`Error: Command "${par}" failed\n${result.stderr}`);
+  }
+
+  // add submodules sequentially
+  urls.forEach(
+    (url, i) => {
+      let isEmpty = nb[i] === 0;
+      if (isEmpty) {
+        console.log(`Skipping to add repo ${url} because is empty!`)
+      }
+      else {
+        let command = `git submodule add ${url}`;
+        let result = shell.exec(command, { silent: false });
         if ((result.code !== 0) || result.error) {
           shell.echo(`Error: Command "${command}" failed\n${result.stderr}`);
-          console.log(`Skipping to add repo ${remote}!\n\n`)
+          console.log(`Skipping to add repo ${url}!\n\n`)
         }
       }
-    } catch (e) {
-      console.log(`Skipping to add repo ${remote} because:\n${e}\n\n`)
-    }
-  });
+    })
+
 }
 exports.addSubmodules = addSubmodules;
