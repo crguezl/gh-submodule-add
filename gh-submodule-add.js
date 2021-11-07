@@ -14,13 +14,16 @@ const {
   ghCont, 
   ghCode, 
   names2urls, 
-  getUserLogin, 
+  getUserLogin,
+  getRepoListFromFile, 
   getRepoListFromAPISearch,
   getNumberOfCommits,
   branches,
-  RepoIsEmpty
+  RepoIsEmpty,
+  getRepoList,
+  addImplicitOrgIfNeeded,
+  addSubmodules
 } = require(path.join(__dirname,'utilities.js'));
-
 
 const { Command } = require('commander');
 
@@ -69,28 +72,11 @@ if (!options.dryrun) {
 }
 
 
-let repoList;
-
 debugger;
-
 if (!options.org && (program.args.length == 1) ) options.org = program.args[0];
 
 let org = options.org || process.env["GITHUB_ORG"] || getUserLogin();
-if (options.csr) 
-  repoList = options.csr;
-else if (options.file) {
-  deb("options file ", options.file);
-  repoList = fs.readFileSync(options.file, "utf-8")
-    .replace(/\s*$/,"") // trim
-    .replace(/^\n*/,"")
-    .replace(/\n+/g,",")
-} else if (options.search) {
-  repoList = getRepoListFromAPISearch(options.search, org);
-}
-else {
-  repoList = getRepoListFromAPISearch('.', org);
-}
-deb(repoList)
+let repoList = getRepoList(options, org);
 
 if (repoList.length === 0) {
   console.log(`No matching repos found in owner "${org}"!`);
@@ -99,44 +85,25 @@ if (repoList.length === 0) {
 
 let repos = repoList.split(/\s*,\s*/);
 
+repos = addImplicitOrgIfNeeded(repos, org);
+
 if (options.regexp) {
-    //console.log(options.regexp);
     let regexp = new RegExp(options.regexp,'i');
-    //console.log(regexp.source);
     repos = repos.filter(rn => {
       return regexp.test(rn)
     });
 }
 
-const LegalGHRepoNames = /^(?:([\p{Letter}\p{Number}._-]+)\/)?([\p{Letter}\p{Number}._-]+)$/ui;
-if (org) {
-    repos = repos.map(r => {
-      let m = LegalGHRepoNames.exec(String(r));
-      //console.log(`LegalGHRepoNames matching = ${m}`);
-      if (m) {
-        if (!m[1]) r = org+"/"+r;
-      } else 
-        showError(`The repo '${r}' does not matches the pattern 'OrganizationName/repoName'`)
-      return r;
-    })
-}
-
 if (options.dryrun) {
     console.error("Only repos with more than one commit will be added as submodules:")
 
-    // console.log(repos);
-
-    //console.log("[");
     repos.forEach(r => {
       if (RepoIsEmpty(r)) { 
-        console.error(`${r} has no commits`);
+        console.error(`${r} is empty!`);
         return;
       }
-      // let [db, nc] = getNumberOfCommits(r);
-      // let nc = 0;
-      console.log(`${r}`);
+      console.log(r);
     });
-    //console.log("]");
 
     process.exit(0);
 }
@@ -144,22 +111,4 @@ if (options.dryrun) {
 let urls = names2urls(repos);
 deb(urls);
 
-urls.forEach((remote, i) => {
-    let repo = repos[i];
-    try {
-      let isEmpty = RepoIsEmpty(repo);
-      if (isEmpty) {
-        console.log(`Skipping to add repo ${remote} because is empty!`)
-      }
-      else {
-        console.log(`git submodule add ${remote}`);
-        let result = shell.exec('git submodule add '+remote, {silent: false});
-        if ((result.code !== 0) || result.error) {
-          shell.echo(`Error: Command "${command}" failed\n${result.stderr}`);
-          console.log(`Skipping to add repo ${remote}!\n\n`)
-        }      
-      }
-    } catch(e) {
-      console.log(`Skipping to add repo ${remote} because:\n${e}\n\n`)
-    }
-});
+addSubmodules(urls, repos);

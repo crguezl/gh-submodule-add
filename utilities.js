@@ -1,7 +1,7 @@
 const ins = require("util").inspect;
 const debug = false;
-const deb = (...args) => { 
-    if (debug) console.log(ins(...args, {depth: null})); 
+const deb = (...args) => {
+  if (debug) console.log(ins(...args, { depth: null }));
 };
 const fs = require("fs");
 const shell = require('shelljs');
@@ -9,40 +9,40 @@ const shell = require('shelljs');
 function showError(error) {
   if (error) {
     console.error(`Error!: ${error}`);
-    process.exit(1); 
+    process.exit(1);
   }
 }
 exports.showError = showError;
 
 function sh(executable, ...args) {
-    let command = `${executable} ${args.join('')}`;
-    deb(command);
-    let result = shell.exec(command, {silent: true});
-    if (result.code !== 0) {
-      shell.echo(`Error: Command "${command}" failed\n${result.stderr}`);
-      shell.exit(result.code);
-    }    
-    return result.stdout.replace(/\s+$/,'');
+  let command = `${executable} ${args.join('')}`;
+  deb(command);
+  let result = shell.exec(command, { silent: true });
+  if (result.code !== 0) {
+    shell.echo(`Error: Command "${command}" failed\n${result.stderr}`);
+    shell.exit(result.code);
+  }
+  return result.stdout.replace(/\s+$/, '');
 }
 exports.sh = sh;
 
 function shContinue(executable, ...args) {
   let command = `${executable} ${args.join('')}`;
   deb(command);
-  let result = shell.exec(command, {silent: true});
+  let result = shell.exec(command, { silent: true });
   if (result.code !== 0) {
     shell.echo(`Error: Command "${command}" failed\n${result.stderr}`);
-  }    
-  return result.stdout.replace(/\s+$/,'');
+  }
+  return result.stdout.replace(/\s+$/, '');
 }
 exports.shContinue = sh.shContinue;
 
 function shStderr(executable, ...args) {
-  
+
   let command = `${executable} ${args.join('')}`;
   // console.log(command);
-  let result = shell.exec(command, {silent: true});
-  return result.stderr; 
+  let result = shell.exec(command, { silent: true });
+  return result.stderr;
 }
 exports.shStderr = shStderr;
 
@@ -65,22 +65,22 @@ function getUserLogin() {
      give us the user and the token
   */
   let result = gh(`api 'user' --jq .login`);
-  return result; 
+  return result;
 }
 exports.getUserLogin = getUserLogin;
 
 function getRepoListFromAPISearch(search, org) {
   let jqQuery;
   let query;
-  
+
   if (!org) {
     console.error("Aborting. Specify a GitHub organization");
     process.exit(1);
   }
   if (search !== ".") {
     query = `search/repositories?q=org%3A${org}`;
-    query +=`%20${encodeURIComponent(search)}`;  
-    jqQuery ='.items | .[].full_name';
+    query += `%20${encodeURIComponent(search)}`;
+    jqQuery = '.items | .[].full_name';
   } else {
     /* Or get all repos */
     if (gh(`api "users/${org}" -q '.type'`).match(/Organization/i)) {
@@ -88,20 +88,28 @@ function getRepoListFromAPISearch(search, org) {
     }
     else
       query = `users/${org}/repos`;
-      jqQuery='.[].full_name'
+    jqQuery = '.[].full_name'
   }
 
   let command = `api --paginate "${query}" -q "${jqQuery}"`;
 
-  let repos = gh(command).replace(/\s+$/,'').replace(/^\s+/,'');
+  let repos = gh(command).replace(/\s+$/, '').replace(/^\s+/, '');
 
   let result = repos.split(/\s+/);
-   
+
   result = result.join(",");
 
   return result;
 }
 exports.getRepoListFromAPISearch = getRepoListFromAPISearch;
+
+function getRepoListFromFile(file) {
+  return fs.readFileSync(file, "utf-8")
+    .replace(/\s*$/, "") // trim
+    .replace(/^\n*/, "")
+    .replace(/\n+/g, ",")
+}
+exports.getRepoListFromFile = getRepoListFromFile;
 
 function getNumberOfCommits(ownerSlashRepo) {
   let [owner, repo] = ownerSlashRepo.split('/');
@@ -121,12 +129,12 @@ function getNumberOfCommits(ownerSlashRepo) {
   }'`
 
   if (RepoIsEmpty(ownerSlashRepo)) {
-     return ['no branch', 0];
+    return ['no branch', 0];
   } else {
-    let numCommits =  ghCont(`api graphql --paginate -f query=${queryNumberOfCommits} --jq .[].[].[].[].[]`)
-    return [defaultBranch, numCommits ];
+    let numCommits = ghCont(`api graphql --paginate -f query=${queryNumberOfCommits} --jq .[].[].[].[].[]`)
+    return [defaultBranch, numCommits];
   }
-    
+
 }
 exports.getNumberOfCommits = getNumberOfCommits;
 
@@ -171,7 +179,60 @@ exports.branches = branches;
 
 
 // https://stackoverflow.com/questions/49442317/github-graphql-repository-query-commits-totalcount
-function RepoIsEmpty(ownerSlashRepo){
-  return branches(ownerSlashRepo).length;
+function RepoIsEmpty(ownerSlashRepo) {
+  return !branches(ownerSlashRepo).length;
 }
 exports.RepoIsEmpty = RepoIsEmpty;
+
+function getRepoList(options, org) {
+  if (options.csr)
+    return options.csr;
+  else if (options.file)
+    return getRepoListFromFile(options.file);
+  else if (options.search) {
+    return getRepoListFromAPISearch(options.search, org);
+  }
+  else {
+    return getRepoListFromAPISearch('.', org);
+  }
+}
+exports.getRepoList = getRepoList;
+
+const LegalGHRepoNames = /^(?:([\p{Letter}\p{Number}._-]+)\/)?([\p{Letter}\p{Number}._-]+)$/ui;
+function addImplicitOrgIfNeeded(repos, org) {
+  if (org) {
+    return repos.map(r => {
+      let m = LegalGHRepoNames.exec(String(r));
+      if (m) {
+        if (!m[1]) r = org + "/" + r;
+      } else
+        showError(`The repo '${r}' does not matches the pattern 'OrganizationName/repoName'`)
+      return r;
+    })
+  }
+  return repos;
+}
+exports.addImplicitOrgIfNeeded = addImplicitOrgIfNeeded;
+
+function addSubmodules(urls, repos) {
+  urls.forEach((remote, i) => {
+    let repo = repos[i];
+    try {
+      let isEmpty = RepoIsEmpty(repo);
+      if (isEmpty) {
+        console.log(`Skipping to add repo ${remote} because is empty!`)
+      }
+      else {
+        console.log(`git submodule add ${remote}`);
+        let result = shell.exec('git submodule add ' + remote, { silent: false });
+        if ((result.code !== 0) || result.error) {
+          shell.echo(`Error: Command "${command}" failed\n${result.stderr}`);
+          console.log(`Skipping to add repo ${remote}!\n\n`)
+        }
+      }
+    } catch (e) {
+      console.log(`Skipping to add repo ${remote} because:\n${e}\n\n`)
+    }
+  });
+}
+exports.addSubmodules = addSubmodules;
