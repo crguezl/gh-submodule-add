@@ -3,6 +3,7 @@ const deb = (...args) => {
     if (debug) console.log(ins(...args, {depth: null})); 
 };
 
+const path = require('path');
 const fs = require("fs");
 const shell = require('shelljs');
 const { Command } = require('commander');
@@ -30,7 +31,7 @@ program.addHelpText('after', `
 );
   
 program.parse(process.argv);
-if (process.argv.length === 2) program.help()
+//if (process.argv.length === 2) program.help()
 
 const debug = program.debug; 
 
@@ -52,104 +53,43 @@ if (!options.dryrun) {
   }
 }
 
-function showError(error) {
-  if (error) {
-    console.error(`Error!: ${error}`);
-    process.exit(1); 
-  }
-}
-
-function sh(executable, ...args) {
-    let command = `${executable} ${args.join('')}`;
-    deb(command);
-    let result = shell.exec(command, {silent: true});
-    if (result.code !== 0) {
-      shell.echo(`Error: Command "${command}" failed\n${result.stderr}`);
-      shell.exit(result.code);
-    }    
-    return result.stdout.replace(/\s+$/,'');
-}
-
-function shContinue(executable, ...args) {
-  let command = `${executable} ${args.join('')}`;
-  deb(command);
-  let result = shell.exec(command, {silent: true});
-  if (result.code !== 0) {
-    shell.echo(`Error: Command "${command}" failed\n${result.stderr}`);
-  }    
-  return result.stdout.replace(/\s+$/,'');
-}
-
-function shStderr(executable, ...args) {
-  
-  let command = `${executable} ${args.join('')}`;
-  // console.log(command);
-  let result = shell.exec(command, {silent: true});
-  return result.stderr; 
-}
+const { 
+  showError, 
+  sh, 
+  shContinue, shStderr, gh, 
+  ghCont, 
+  ghCode, 
+  names2urls, 
+  getUserLogin, 
+  getRepoListFromAPISearch,
+  getNumberOfCommits,
+  branches 
+} = require(path.join(__dirname,'utilities.js'));
 
 
-const gh = (...args) => sh("gh", ...args);
-const ghCont = (...args) => shContinue("gh", ...args);
-const ghCode = (...args) => shStderr("gh", ...args);
 
-// const git = (...args) => sh("git", ...args);
+console.log(branches("ULL-MFP-AET-2122/aprender-markdown-chloe-boistel-perez-alu0100788020"));
+console.log(branches("ULL-MII-SYTWS-2122/asyncserialize-mstoisor"));
+process.exit(0);
 
-function names2urls(names) {
-   let urls = names.map(repoName => gh(`browse -n --repo ${repoName}`));
-   return urls.map(u => u.replace(/\n$/, '.git'));
-}
 
-function getUserLogin() {
-   /* See also 
-      gh auth status -t
-      give us the user and the token
-   */
-   let result = gh(`api 'user' --jq .login`);
-   return result; 
-}
-
-function getRepoListFromAPISearch(search, org) {
-  let jqQuery;
-  let query;
-  
-  if (!org) {
-    console.error("Aborting. Specify a GitHub organization");
-    process.exit(1);
-  }
-  if (search !== ".") {
-    query = `search/repositories?q=org%3A${org}`;
-    query +=`%20${encodeURIComponent(search)}`;  
-    jqQuery ='.items | .[].full_name';
-  } else {
-    /* Or get all repos */
-    if (gh(`api "users/${org}" -q '.type'`).match(/Organization/i)) {
-      query = `orgs/${org}/repos`;
-    }
-    else
-      query = `users/${org}/repos`;
-      jqQuery='.[].full_name'
-  }
-
-  let command = `api --paginate "${query}" -q "${jqQuery}"`;
-
-  let repos = gh(command).replace(/\s+$/,'').replace(/^\s+/,'');
-
-  let result = repos.split(/\s+/);
-   
-  result = result.join(",");
-
-  return result;
-}
-
-function getNumberOfCommits(ownerSlashRepo) {
+// https://stackoverflow.com/questions/49442317/github-graphql-repository-query-commits-totalcount
+function RepoIsEmpty(ownerSlashRepo){
+  console.log("RepoIsEmpty called")
   let [owner, repo] = ownerSlashRepo.split('/');
-  let defaultBranch = gh(`api /repos/${ownerSlashRepo} --jq .default_branch`);
-  // console.log(owner, repo);
-  const queryNumberOfCommits = `'
-  query {
-    repository(owner:"${owner}", name:"${repo}") {
-      object(expression:"${defaultBranch}") {
+
+  let query = (owner, name) => `
+  query numberOfcommits {
+  
+    repository(owner:"${owner}", name:"${name}") {
+      masterbranch: object(expression:"master") {
+        ... on Commit {
+          history {
+            totalCount
+          }
+        }
+      }
+      mainbranch:  object(expression:"main") {
         ... on Commit {
           history {
             totalCount
@@ -157,26 +97,21 @@ function getNumberOfCommits(ownerSlashRepo) {
         }
       }
     }
-  }'`
-
-  if (RepoIsEmpty(ownerSlashRepo)) {
-     return ['no branch', 0];
-  } else {
-    let numCommits =  ghCont(`api graphql --paginate -f query=${queryNumberOfCommits} --jq .[].[].[].[].[]`)
-    return [defaultBranch, numCommits ];
   }
-    
+  `;
+
+  let queryS = `api graphql -f query='${query(owner, repo)}'`;
+  console.log(queryS)
+  let result = ghCont(queryS)
+  console.log(ins(result, {depth: null}));
+
+  return result;
 }
 
-function RepoIsEmpty(ownerSlashRepo){
-  let result = ghCode(` api '/repos/${ownerSlashRepo}/contents/'`);
-  //console.log(result);
-  return result.match(/empty.*404/) !== null;
-}
 
-
-//console.log(RepoIsEmpty("ULL-MII-SYTWS-2122/asyncmap-crguezl"));
-//console.log(RepoIsEmpty("ULL-MII-SYTWS-2122/asyncserialize-mstoisor"));
+console.log(RepoIsEmpty("ULL-MII-SYTWS-2122/asyncmap-crguezl"));
+console.log(RepoIsEmpty("ULL-MII-SYTWS-2122/asyncserialize-mstoisor"));
+process.exit(0);
 
 let repoList;
 
