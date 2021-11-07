@@ -110,8 +110,9 @@ let urls = names2urls(repos);
 
 addSubmodules(urls, repos);
 
-/* 
-unified graphql request for empty repos download complete of 1 repo
+/*
+
+# unified graphql request for empty repos download complete of 1 repo
 ➜  asyncserialize git:(master) ✗ time gh submodule-add -s asyncserialize -o ULL-MII-SYTWS-2122
 Skipping to add repo https://github.com/ULL-MII-SYTWS-2122/asyncserialize-mstoisor because is empty!
 Skipping to add repo https://github.com/ULL-MII-SYTWS-2122/asyncserialize-lorenaolaru because is empty!
@@ -123,7 +124,7 @@ Skipping to add repo https://github.com/ULL-MII-SYTWS-2122/asyncserialize-PaulaE
 gh submodule-add -s asyncserialize -o ULL-MII-SYTWS-2122  1,64s user 0,63s system 31% cpu 7,297 total
 
 
-unified graphql request for empty repos -n option. No downloads
+# unified graphql request for empty repos -n option. No downloads
 ➜  asyncserialize git:(master) ✗ time gh submodule-add -s asyncserialize -o ULL-MII-SYTWS-2122 -n
 Only repos with more than one commit will be added as submodules:
 ULL-MII-SYTWS-2122/asyncserialize-mstoisor is empty!
@@ -133,4 +134,61 @@ ULL-MII-SYTWS-2122/asyncserialize-ddialar is empty!
 ULL-MII-SYTWS-2122/asyncserialize-alu0101102726
 ULL-MII-SYTWS-2122/asyncserialize-PaulaExposito is empty!
 gh submodule-add -s asyncserialize -o ULL-MII-SYTWS-2122 -n  0,39s user 0,15s system 26% cpu 2,040 total
+
+# unified graphql request for empty repos -n option. 16 repos. No downloads
+➜  aprender-markdown git:(master) ✗ time gh submodule-add -s aprender-markdown --org ULL-MFP-AET-2122 -n
+Only repos with more than one commit will be added as submodules:
+ULL-MFP-AET-2122/aprender-markdown-anabel-coello-perez-alu0100885200
+ULL-MFP-AET-2122/aprender-markdown-alejandro-gonzalez-sarasola-alu0100260076
+ULL-MFP-AET-2122/aprender-markdown-wim-van-hoye-alu0101520377
+ULL-MFP-AET-2122/aprender-markdown-adela-gonzalez-maury-alu0101116204
+ULL-MFP-AET-2122/aprender-markdown-ivan-gonzalez-aguiar-alu0100551266
+ULL-MFP-AET-2122/aprender-markdown-carlos-guerra-olivera-alu0100703535
+ULL-MFP-AET-2122/aprender-markdown-adrian-prieto-curbelo_alu0100948387
+ULL-MFP-AET-2122/aprender-markdown-manuel_curbelo_alu0100045130
+ULL-MFP-AET-2122/aprender-markdown-chloe-boistel-perez-alu0100788020
+ULL-MFP-AET-2122/aprender-markdown-noelia-rodriguez-hernandez-alu0100595420
+ULL-MFP-AET-2122/aprender-markdown-alejandro-marrero-diaz-alu100825008
+ULL-MFP-AET-2122/aprender-markdown-yeray_exposito_garcia_alu0100951844
+ULL-MFP-AET-2122/aprender-markdown-angel-ramallobenitez-alu0100312898
+ULL-MFP-AET-2122/aprender-markdown-nestor-gonzalez-lopez-alu0100108859
+ULL-MFP-AET-2122/aprender-markdown-jaime-garcia-bullejos-alu0100906806
+ULL-MFP-AET-2122/gitpod-template
+gh submodule-add -s aprender-markdown --org ULL-MFP-AET-2122 -n  0,39s user 0,16s system 22% cpu 2,495 total
+
+# Unified graphql request for empty repos -n option. 16 downloads
+
+git submodule add https://github.com/ULL-MFP-AET-2122/aprender-markdown-anabel-coello-perez-alu0100885200
+Clonando en '/Users/casianorodriguezleon/campus-virtual/2122/aet2122/practicas-alumnos/aprender-markdown/aprender-markdown-anabel-coello-perez-alu0100885200'...
+git submodule add https://github.com/ULL-MFP-AET-2122/aprender-markdown-alejandro-gonzalez-sarasola-alu0100260076
+Clonando en '/Users/casianorodriguezleon/campus-virtual/2122/aet2122/practicas-alumnos/aprender-markdown/aprender-markdown-alejandro-gonzalez-sarasola-alu0100260076'...
+git submodule add https://github.com/ULL-MFP-AET-2122/aprender-markdown-wim-van-hoye-alu0101520377
+Clonando en '/Users/casianorodriguezleon/campus-virtual/2122/aet2122/practicas-alumnos/aprender-markdown/aprender-markdown-wim-van-hoye-alu0101520377'...
+git submodule add https://github.com/ULL-MFP-AET-2122/aprender-markdown-adela-gonzalez-maury-alu0101116204
+Clonando en '/Users/casianorodriguezleon/campus-virtual/2122/aet2122/practicas-alumnos/aprender-markdown/aprender-markdown-adela-gonzalez-maury-alu0101116204'...
+git submodule add https://github.com/ULL-MFP-AET-2122/aprender-markdown-ivan-gonzalez-aguiar-alu0100551266
+Clonando en '/Users/casianorodriguezleon/campus-virtual/2122/aet2122/practicas-alumnos/aprender-markdown/aprender-markdown-ivan-gonzalez-aguiar-alu0100551266'...
+git submodule add https://github.com/ULL-MFP-AET-2122/aprender-markdown-carlos-guerra-olivera-alu0100703535
+Clonando en '/Users/casianorodriguezleon/campus-virtual/2122/aet2122/practicas-alumnos/aprender-markdown/aprender-markdown-carlos-guerra-olivera-alu0100703535'...
+git submodule add https://github.com/ULL-MFP-AET-2122/aprender-markdown-adrian-prieto-curbelo_alu0100948387
+Clonando en '/Users/casianorodriguezleon/campus-virtual/2122/aet2122/practicas-alumnos/aprender-markdown/aprender-markdown-adrian-prieto-curbelo_alu0100948387'...
+git submodule add https://github.com/ULL-MFP-AET-2122/aprender-markdown-manuel_curbelo_alu0100045130
+Clonando en '/Users/casianorodriguezleon/campus-virtual/2122/aet2122/practicas-alumnos/aprender-markdown/aprender-markdown-manuel_curbelo_alu0100045130'...
+git submodule add https://github.com/ULL-MFP-AET-2122/aprender-markdown-chloe-boistel-perez-alu0100788020
+Clonando en '/Users/casianorodriguezleon/campus-virtual/2122/aet2122/practicas-alumnos/aprender-markdown/aprender-markdown-chloe-boistel-perez-alu0100788020'...
+git submodule add https://github.com/ULL-MFP-AET-2122/aprender-markdown-noelia-rodriguez-hernandez-alu0100595420
+Clonando en '/Users/casianorodriguezleon/campus-virtual/2122/aet2122/practicas-alumnos/aprender-markdown/aprender-markdown-noelia-rodriguez-hernandez-alu0100595420'...
+git submodule add https://github.com/ULL-MFP-AET-2122/aprender-markdown-alejandro-marrero-diaz-alu100825008
+Clonando en '/Users/casianorodriguezleon/campus-virtual/2122/aet2122/practicas-alumnos/aprender-markdown/aprender-markdown-alejandro-marrero-diaz-alu100825008'...
+git submodule add https://github.com/ULL-MFP-AET-2122/aprender-markdown-yeray_exposito_garcia_alu0100951844
+Clonando en '/Users/casianorodriguezleon/campus-virtual/2122/aet2122/practicas-alumnos/aprender-markdown/aprender-markdown-yeray_exposito_garcia_alu0100951844'...
+git submodule add https://github.com/ULL-MFP-AET-2122/aprender-markdown-angel-ramallobenitez-alu0100312898
+Clonando en '/Users/casianorodriguezleon/campus-virtual/2122/aet2122/practicas-alumnos/aprender-markdown/aprender-markdown-angel-ramallobenitez-alu0100312898'...
+git submodule add https://github.com/ULL-MFP-AET-2122/aprender-markdown-nestor-gonzalez-lopez-alu0100108859
+Clonando en '/Users/casianorodriguezleon/campus-virtual/2122/aet2122/practicas-alumnos/aprender-markdown/aprender-markdown-nestor-gonzalez-lopez-alu0100108859'...
+git submodule add https://github.com/ULL-MFP-AET-2122/aprender-markdown-jaime-garcia-bullejos-alu0100906806
+Clonando en '/Users/casianorodriguezleon/campus-virtual/2122/aet2122/practicas-alumnos/aprender-markdown/aprender-markdown-jaime-garcia-bullejos-alu0100906806'...
+git submodule add https://github.com/ULL-MFP-AET-2122/gitpod-template
+Clonando en '/Users/casianorodriguezleon/campus-virtual/2122/aet2122/practicas-alumnos/aprender-markdown/gitpod-template'...
+gh submodule-add -s aprender-markdown --org ULL-MFP-AET-2122  5,83s user 3,17s system 25% cpu 35,026 total
 */
