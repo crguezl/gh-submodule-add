@@ -290,7 +290,7 @@ function addImplicitOrgIfNeeded(repos, org) {
 exports.addImplicitOrgIfNeeded = addImplicitOrgIfNeeded;
 
 function addSubmodules(urls, repos, parallel) {
-  //console.log(repos);
+  console.log(repos);
   let nb = numBranches(repos)
   let par = `${concurrently}  -m ${parallel} `;
 
@@ -319,7 +319,8 @@ function addSubmodules(urls, repos, parallel) {
         console.log(`Skipping to add repo ${url} because is empty!`)
       }
       else {
-        let command = `git submodule add ${url}`;
+        let repoName = repos[i].split('/')[1];
+        let command = `git submodule add ${url}; git submodule absorbgitdirs ${repoName}`;
         let result = shell.exec(command, { silent: false });
         if ((result.code !== 0) || result.error) {
           shell.echo(`Error: Command "${command}" failed\n${result.stderr}`);
