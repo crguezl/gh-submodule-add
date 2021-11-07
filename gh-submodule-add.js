@@ -39,7 +39,8 @@ program
   .option('-c, --csr <comma separated list of repos>', 'the list of repos is specified as a comma separated list')
   .option('-f, --file <file>', 'file with the list of repos, one per line')
   .option('-n --dryrun','just show what repos will be added as submodules')
-  .option('-o --org <org>', 'default organization or user');
+  .option('-o --org <org>', 'default organization or user')
+  .option('-p --parallel <int>', 'number of concurrent  processes during the cloning stage', 8);
 
 program.addHelpText('after', `
   - You can set the default organization through the GITHUB_ORG environment variable
@@ -108,7 +109,7 @@ if (options.dryrun) {
 
 let urls = names2urls(repos);
 
-addSubmodules(urls, repos);
+addSubmodules(urls, repos, options.parallel);
 
 /*
 

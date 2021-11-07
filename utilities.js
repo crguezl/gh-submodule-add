@@ -289,12 +289,12 @@ function addImplicitOrgIfNeeded(repos, org) {
 }
 exports.addImplicitOrgIfNeeded = addImplicitOrgIfNeeded;
 
-function addSubmodules(urls, repos) {
+function addSubmodules(urls, repos, parallel) {
   //console.log(repos);
   let nb = numBranches(repos)
-  let par = concurrently + ' ';
+  let par = `${concurrently}  -m ${parallel} `;
 
-  console.log(`cloning in parallel ...`);
+  console.log(`cloning with ${parallel} concurrent processes ...`);
   urls.forEach(
     (url, i) => {
       let isEmpty = nb[i] === 0;
@@ -305,8 +305,8 @@ function addSubmodules(urls, repos) {
         par += ` "git clone ${url}"`;
       }
     })
-  console.log(par);
-  let result = shell.exec(par, { silent: true });
+  //console.log(par);
+  let result = shell.exec(par, { silent: false });
   if (result.code !== 0) {
     console.error(`Error: Command "${par}" failed\n${result.stderr}`);
   }
