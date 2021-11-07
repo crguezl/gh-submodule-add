@@ -289,7 +289,6 @@ function addSubmodules(urls, repos) {
   let nb = numBranches(repos)
   
   urls.forEach((remote, i) => {
-    let repo = repos[i];
     try {
       let isEmpty = nb[i] === 0;
       if (isEmpty) {
