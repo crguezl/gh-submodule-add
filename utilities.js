@@ -73,6 +73,7 @@ function getRepoListFromAPISearch(search, org) {
   let jqQuery;
   let query;
 
+  //console.log('getRepoListFromAPISearch '+search+" "+org)
   if (!org) {
     console.error("Aborting. Specify a GitHub organization");
     process.exit(1);
@@ -154,8 +155,7 @@ function branches(ownerSlashRepo) {
                 branchName:name
               }
             }
-            pageInfo {
-              
+            pageInfo {             
               endCursor #use this value to paginate through repos with more than 100 branches
             }
           }
@@ -206,7 +206,7 @@ function numBranches(ownerSlashRepo) {
   });
   bigQuery += '\n}';
 
-  console.log(bigQuery);
+  //console.log(bigQuery);
 
 
   let queryS = `api graphql -f query='${bigQuery}'`;
@@ -218,19 +218,10 @@ function numBranches(ownerSlashRepo) {
   let branchesLengths = alias.map((a,i) => result.data[a].repository.refs.edges.length)
   return branchesLengths;
 
-    /*
-  let branchNames = JSON.parse(result).data.organization.repository.refs.edges; // array of branch names
-
-  if (branchNames.length) {
-    branchNames = branchNames.map(b => b.node.branchName)
-  }
-
-  return branchNames;
-  */
 }
 exports.numBranches = numBranches;
 
-
+/*
 let testArr = [
   "ULL-MFP-AET-2122/aprender-markdown-anabel-coello-perez-alu0100885200",
   "ULL-MII-SYTWS-2122/asyncserialize-lorenaolaru",
@@ -238,6 +229,7 @@ let testArr = [
 ]
 console.log(numBranches(testArr));
 process.exit(0);
+*/
 
 // https://stackoverflow.com/questions/49442317/github-graphql-repository-query-commits-totalcount
 function RepoIsEmpty(ownerSlashRepo) {
@@ -257,7 +249,7 @@ function getRepoList(options, org) {
   else {
     repos = getRepoListFromAPISearch('.', org);
   }
-  repos = repos.split(/\s*,\s*/);
+  repos = repos.length? repos.split(/\s*,\s*/) : [];
   repos = addImplicitOrgIfNeeded(repos, org);
 
   return repos;
@@ -267,6 +259,7 @@ exports.getRepoList = getRepoList;
 
 const LegalGHRepoNames = /^(?:([\p{Letter}\p{Number}._-]+)\/)?([\p{Letter}\p{Number}._-]+)$/ui;
 function addImplicitOrgIfNeeded(repos, org) {
+  //console.log(repos);
   if (org) {
     return repos.map(r => {
       let m = LegalGHRepoNames.exec(String(r));

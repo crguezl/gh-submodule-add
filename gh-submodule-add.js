@@ -19,6 +19,7 @@ const {
   //getRepoListFromAPISearch,
   //getNumberOfCommits,
   //branches,
+  numBranches,
   RepoIsEmpty,
   getRepoList,
   addImplicitOrgIfNeeded,
@@ -91,14 +92,15 @@ if (options.regexp) {
 }
 
 if (options.dryrun) {
+
     console.error("Only repos with more than one commit will be added as submodules:")
 
-    repos.forEach(r => {
-      if (RepoIsEmpty(r)) { 
+    //console.log(repos);
+    let nb = numBranches(repos)
+    repos.forEach((r,i) => {
+      if (nb[i] === 0)
         console.error(`${r} is empty!`);
-        return;
-      }
-      console.log(r);
+      else console.log(r);
     });
 
     process.exit(0);
