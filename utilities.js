@@ -177,6 +177,67 @@ function branches(ownerSlashRepo) {
 }
 exports.branches = branches;
 
+function numBranches(ownerSlashRepo) {
+  let splitted = ownerSlashRepo.map(r => r.split('/'));
+  let alias = splitted.map(r => r[1]).map(r => r.replace(/[.-]/g,'_'));
+
+  let query = (alias, orgName, repoName) => {
+    return `
+      ${alias}: organization(login: "${orgName}") {
+        repository(name: "${repoName}") {
+          id
+          name
+          refs(refPrefix: "refs/heads/", first: 2) {
+            edges {
+              node {
+                branchName:name
+              }
+            }
+          }
+        }
+      }
+
+    `
+  }
+
+  let bigQuery = 'query {\n';
+  splitted.forEach(([org, repo], i) => {
+    bigQuery += query(alias[i], org, repo)
+  });
+  bigQuery += '\n}';
+
+  console.log(bigQuery);
+
+
+  let queryS = `api graphql -f query='${bigQuery}'`;
+  //console.log(queryS)
+
+  result = ghCont(queryS)
+  result = JSON.parse(result);
+
+  let branchesLengths = alias.map((a,i) => result.data[a].repository.refs.edges.length)
+  return branchesLengths;
+
+    /*
+  let branchNames = JSON.parse(result).data.organization.repository.refs.edges; // array of branch names
+
+  if (branchNames.length) {
+    branchNames = branchNames.map(b => b.node.branchName)
+  }
+
+  return branchNames;
+  */
+}
+exports.numBranches = numBranches;
+
+
+let testArr = [
+  "ULL-MFP-AET-2122/aprender-markdown-anabel-coello-perez-alu0100885200",
+  "ULL-MII-SYTWS-2122/asyncserialize-lorenaolaru",
+  "ULL-MFP-AET-2122/aprender-markdown-adela-gonzalez-maury-alu0101116204"
+]
+console.log(numBranches(testArr));
+process.exit(0);
 
 // https://stackoverflow.com/questions/49442317/github-graphql-repository-query-commits-totalcount
 function RepoIsEmpty(ownerSlashRepo) {
