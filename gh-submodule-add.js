@@ -6,6 +6,22 @@ const deb = (...args) => {
 const path = require('path');
 const fs = require("fs");
 const shell = require('shelljs');
+
+const { 
+  showError, 
+  sh, 
+  shContinue, shStderr, gh, 
+  ghCont, 
+  ghCode, 
+  names2urls, 
+  getUserLogin, 
+  getRepoListFromAPISearch,
+  getNumberOfCommits,
+  branches,
+  RepoIsEmpty
+} = require(path.join(__dirname,'utilities.js'));
+
+
 const { Command } = require('commander');
 
 const program = new Command();
@@ -31,26 +47,12 @@ program.addHelpText('after', `
 );
   
 program.parse(process.argv);
-//if (process.argv.length === 2) program.help()
+if (process.argv.length === 2) program.help()
 
 const debug = program.debug; 
 
 const options = program.opts();
 deb(options);
-
-const { 
-  showError, 
-  sh, 
-  shContinue, shStderr, gh, 
-  ghCont, 
-  ghCode, 
-  names2urls, 
-  getUserLogin, 
-  getRepoListFromAPISearch,
-  getNumberOfCommits,
-  branches 
-} = require(path.join(__dirname,'utilities.js'));
-
 
 if (!shell.which('git')) {
   showError('Sorry, this extension requires git installed!');
@@ -59,7 +61,6 @@ if (!shell.which('gh')) {
     showError('Sorry, this extension requires GitHub Cli (gh) installed!');
 }
 
-
 if (!options.dryrun) {
   let isGitFolder = shell.exec("git rev-parse --is-inside-work-tree", {silent: true});
    if (!isGitFolder || !fs.existsSync(".git")) {
@@ -67,50 +68,6 @@ if (!options.dryrun) {
   }
 }
 
-console.log(branches("ULL-MFP-AET-2122/aprender-markdown-chloe-boistel-perez-alu0100788020"));
-console.log(branches("ULL-MII-SYTWS-2122/asyncserialize-mstoisor"));
-process.exit(0);
-
-
-// https://stackoverflow.com/questions/49442317/github-graphql-repository-query-commits-totalcount
-function RepoIsEmpty(ownerSlashRepo){
-  console.log("RepoIsEmpty called")
-  let [owner, repo] = ownerSlashRepo.split('/');
-
-  let query = (owner, name) => `
-  query numberOfcommits {
-  
-    repository(owner:"${owner}", name:"${name}") {
-      masterbranch: object(expression:"master") {
-        ... on Commit {
-          history {
-            totalCount
-          }
-        }
-      }
-      mainbranch:  object(expression:"main") {
-        ... on Commit {
-          history {
-            totalCount
-          }
-        }
-      }
-    }
-  }
-  `;
-
-  let queryS = `api graphql -f query='${query(owner, repo)}'`;
-  console.log(queryS)
-  let result = ghCont(queryS)
-  console.log(ins(result, {depth: null}));
-
-  return result;
-}
-
-
-console.log(RepoIsEmpty("ULL-MII-SYTWS-2122/asyncmap-crguezl"));
-console.log(RepoIsEmpty("ULL-MII-SYTWS-2122/asyncserialize-mstoisor"));
-process.exit(0);
 
 let repoList;
 
@@ -205,5 +162,4 @@ urls.forEach((remote, i) => {
     } catch(e) {
       console.log(`Skipping to add repo ${remote} because:\n${e}\n\n`)
     }
-
 });

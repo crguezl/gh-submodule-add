@@ -3,7 +3,6 @@ const debug = false;
 const deb = (...args) => { 
     if (debug) console.log(ins(...args, {depth: null})); 
 };
-const path = require('path');
 const fs = require("fs");
 const shell = require('shelljs');
 
@@ -132,7 +131,6 @@ function getNumberOfCommits(ownerSlashRepo) {
 exports.getNumberOfCommits = getNumberOfCommits;
 
 function branches(ownerSlashRepo) {
-  console.log("HasBranches called")
   let [owner, repo] = ownerSlashRepo.split('/');
 
   let query = (orgName, repoName) => `
@@ -171,3 +169,9 @@ function branches(ownerSlashRepo) {
 }
 exports.branches = branches;
 
+
+// https://stackoverflow.com/questions/49442317/github-graphql-repository-query-commits-totalcount
+function RepoIsEmpty(ownerSlashRepo){
+  return branches(ownerSlashRepo).length;
+}
+exports.RepoIsEmpty = RepoIsEmpty;
