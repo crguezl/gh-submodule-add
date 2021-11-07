@@ -9,16 +9,16 @@ const shell = require('shelljs');
 
 const { 
   showError, 
-  sh, 
-  shContinue, shStderr, gh, 
-  ghCont, 
-  ghCode, 
+  //sh, 
+  //shContinue, shStderr, gh, 
+  //ghCont, 
+  //ghCode, 
   names2urls, 
   getUserLogin,
-  getRepoListFromFile, 
-  getRepoListFromAPISearch,
-  getNumberOfCommits,
-  branches,
+  //getRepoListFromFile, 
+  //getRepoListFromAPISearch,
+  //getNumberOfCommits,
+  //branches,
   RepoIsEmpty,
   getRepoList,
   addImplicitOrgIfNeeded,
@@ -76,16 +76,12 @@ debugger;
 if (!options.org && (program.args.length == 1) ) options.org = program.args[0];
 
 let org = options.org || process.env["GITHUB_ORG"] || getUserLogin();
-let repoList = getRepoList(options, org);
+let repos = getRepoList(options, org);
 
-if (repoList.length === 0) {
+if (repos.length === 0) {
   console.log(`No matching repos found in owner "${org}"!`);
   process.exit(0);
 }
-
-let repos = repoList.split(/\s*,\s*/);
-
-repos = addImplicitOrgIfNeeded(repos, org);
 
 if (options.regexp) {
     let regexp = new RegExp(options.regexp,'i');
@@ -109,6 +105,5 @@ if (options.dryrun) {
 }
 
 let urls = names2urls(repos);
-deb(urls);
 
 addSubmodules(urls, repos);

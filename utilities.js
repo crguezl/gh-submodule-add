@@ -185,16 +185,22 @@ function RepoIsEmpty(ownerSlashRepo) {
 exports.RepoIsEmpty = RepoIsEmpty;
 
 function getRepoList(options, org) {
+  let repos;
   if (options.csr)
-    return options.csr;
+    repos = options.csr;
   else if (options.file)
-    return getRepoListFromFile(options.file);
+    repos = getRepoListFromFile(options.file);
   else if (options.search) {
-    return getRepoListFromAPISearch(options.search, org);
+    repos = getRepoListFromAPISearch(options.search, org);
   }
   else {
-    return getRepoListFromAPISearch('.', org);
+    repos = getRepoListFromAPISearch('.', org);
   }
+  repos = repos.split(/\s*,\s*/);
+  repos = addImplicitOrgIfNeeded(repos, org);
+
+  return repos;
+
 }
 exports.getRepoList = getRepoList;
 
