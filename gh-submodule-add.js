@@ -20,9 +20,9 @@ const {
   //getNumberOfCommits,
   //branches,
   numBranches,
-  RepoIsEmpty,
+  //RepoIsEmpty,
   getRepoList,
-  addImplicitOrgIfNeeded,
+  //addImplicitOrgIfNeeded,
   addSubmodules
 } = require(path.join(__dirname,'utilities.js'));
 
