@@ -6,7 +6,6 @@ const deb = (...args) => {
 const fs = require("fs");
 const shell = require('shelljs');
 const path = require('path');
-const maxProcesses = 8;
 
 const concurrently = path.join(__dirname, 'node_modules', '.bin', 'concurrently');
 //console.log(concurrently);
@@ -311,7 +310,7 @@ function addSubmodules(urls, repos, parallel) {
     console.error(`Error: Command "${par}" failed\n${result.stderr}`);
   }
 
-  // add submodules sequentially
+  // add submodules sequentially and absorbgitdirs
   urls.forEach(
     (url, i) => {
       let isEmpty = nb[i] === 0;
