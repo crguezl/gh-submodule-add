@@ -74,6 +74,84 @@ function getUserLogin() {
 exports.getUserLogin = getUserLogin;
 
 function getRepoListFromAPISearch(search, org) {
+  let query;
+  const allRepos = (org) => `
+  query($endCursor: String) {
+    organization(login: "${org}") {
+      repositories(first: 100, after: $endCursor) {
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+        edges {
+          node  {
+            name
+          }
+        }
+      }
+    }
+  }
+  `
+  const searchForRepos = (search, org) => `
+  query($endCursor: String) {
+    search(type: REPOSITORY, query: "org:${org} ${search} in:name", first: 100, after: $endCursor) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      edges {
+        node {
+          ... on Repository {
+            name
+          }
+        }
+      }
+    }
+  }
+  `
+   
+  function executeQuery(query) {
+    let command = `gh api graphql --paginate -f query='${query}'`;
+    //console.log(command);
+  
+    let queryResult = shell.exec(command, { silent: true });
+    if (queryResult.code !== 0 || queryResult.length === 0) {
+      console.error(`No repos found in org "${org}" matching query "${search}"`)
+      process.exit(1);
+    }
+    return JSON.parse(queryResult).data;  
+  }
+
+  //console.log('getRepoListFromAPISearch '+search+" "+org)
+  if (!org) {
+    console.error("Aborting. Specify a GitHub organization");
+    process.exit(1);
+  }
+
+  try {
+    if (search === ".") {
+      let queryResult = executeQuery(allRepos(org));
+      let result = queryResult.organization.repositories.edges.map(r => r.node.name).join(",");
+      
+      return result;
+
+    } else {
+      let queryResult = executeQuery(searchForRepos(search, org));
+      let result = queryResult.search.edges.map(r => r.node.name).join(",");
+
+      //console.log(result)
+      return result;
+
+    }
+
+  } catch (error) {
+    console.error(`${error}: No repos found in org "${org}" matching query "${search}"`)
+  }
+
+}
+
+/* REST version
+function getRepoListFromAPISearch(search, org) {
   let jqQuery;
   let query;
 
@@ -89,7 +167,7 @@ function getRepoListFromAPISearch(search, org) {
       query += `%20${encodeURIComponent(search)}%20in%3Aname`;
       jqQuery = '.items | .[].full_name';
     } else {
-      /* Or get all repos */
+      // Or get all repos 
       if (gh(`api "users/${org}" -q '.type'`).match(/Organization/i)) {
         query = `orgs/${org}/repos`;
       }
@@ -116,6 +194,8 @@ function getRepoListFromAPISearch(search, org) {
   }
 
 }
+*/
+
 exports.getRepoListFromAPISearch = getRepoListFromAPISearch;
 
 function getRepoListFromFile(file) {
@@ -162,7 +242,7 @@ function branches(ownerSlashRepo) {
         repository(name: "${repoName}") {
           id
           name
-          refs(refPrefix: "refs/heads/", first: 10) {
+          refs(refPrefix: "refs/heads/", first: 2) {
             edges {
               
               node {
