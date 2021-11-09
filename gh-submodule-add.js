@@ -45,8 +45,7 @@ program
 program.addHelpText('after', `
   - You can set the default organization through the GITHUB_ORG environment variable
   - When using the option '-s', a dot '.' refers to all the repos
-  - Option '-s' works only when all the repos belong to the same org
-  - Use of one and only one of the options '-s' or '-c'  or '-f' it is required
+  - Option '-s' assumes all the repos belong to the same org
   - The current folder must be the root of a git repo unless option '-n' is used
 `
 );
@@ -78,6 +77,7 @@ debugger;
 if (!options.org && (program.args.length == 1) ) options.org = program.args[0];
 
 let org = options.org || process.env["GITHUB_ORG"] || getUserLogin();
+
 let repos = getRepoList(options, org);
 
 if (repos.length === 0) {
