@@ -1,6 +1,6 @@
 {
   "name": "gh-submodule-add",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "",
   "main": "gh-submodule-add.js",
   "scripts": {
