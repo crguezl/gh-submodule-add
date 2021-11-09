@@ -86,7 +86,7 @@ function getRepoListFromAPISearch(search, org) {
   try {
     if (search !== ".") {
       query = `search/repositories?q=org%3A${org}`;
-      query += `%20${encodeURIComponent(search)}`;
+      query += `%20${encodeURIComponent(search)}%20in%3Aname`;
       jqQuery = '.items | .[].full_name';
     } else {
       /* Or get all repos */
