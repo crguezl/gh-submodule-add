@@ -369,7 +369,7 @@ function addImplicitOrgIfNeeded(repos, org) {
 exports.addImplicitOrgIfNeeded = addImplicitOrgIfNeeded;
 
 function addSubmodules(urls, repos, parallel) {
-  console.log(repos);
+  //console.log(repos);
   let nb = numBranches(repos)
   let par = `${concurrently}  -m ${parallel} `;
 
