@@ -32,13 +32,15 @@ const program = new Command();
 program.version(require('./package.json').version);
 
 program
-  .name("gh submodule-add [options] [organization]")
+  .name("gh submodule-add [options] [organization] -- [git submodule options]")
+  .allowUnknownOption()
   .option('-d, --debug', 'output extra debugging')
   .option('-s, --search <query>', "search <query> using GitHub Search API. A dot '.' refers to all the repos")
   .option('-r, --regexp <regexp>', 'filter <query> results using <regexp>')
   .option('-c, --csr <comma separated list of repos>', 'the list of repos is specified as a comma separated list')
   .option('-f, --file <file>', 'file with the list of repos, one per line')
   .option('-n --dryrun','just show what repos will be added as submodules')
+  .option('-D --depth <depth>','Create a shallow clone with a history truncated to <depth> number of commits')
   .option('-o --org <org>', 'default organization or user')
   .option('-p --parallel <int>', 'number of concurrent  processes during the cloning stage', 8);
 
@@ -56,7 +58,8 @@ if (process.argv.length === 2) program.help()
 const debug = program.debug; 
 
 const options = program.opts();
-deb(options);
+//console.log(options);
+//console.log(program.args)
 
 if (!shell.which('git')) {
   showError('Sorry, this extension requires git installed!');
@@ -74,7 +77,7 @@ if (!options.dryrun) {
 
 
 debugger;
-if (!options.org && (program.args.length == 1) ) options.org = program.args[0];
+if (!options.org && (program.args.length == 1) ) options.org = program.args.shift();
 
 let org = options.org || process.env["GITHUB_ORG"] || getUserLogin();
 
@@ -109,7 +112,7 @@ if (options.dryrun) {
 
 let urls = names2urls(repos);
 
-addSubmodules(urls, repos, options.parallel);
+addSubmodules(urls, repos, options.parallel, program.depth, program.args);
 
 /*
 
