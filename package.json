@@ -3,9 +3,6 @@
   "version": "1.6.0",
   "description": "",
   "main": "gh-submodule-add.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/crguezl/gh-submodule-add.git"

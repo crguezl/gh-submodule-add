@@ -368,9 +368,10 @@ function addImplicitOrgIfNeeded(repos, org) {
 }
 exports.addImplicitOrgIfNeeded = addImplicitOrgIfNeeded;
 
-function addSubmodules(urls, repos, parallel, depth, submoduleArgs) {
+function addSubmodules(urls, repos, parallel, depth, cloneOnly, submoduleArgs) {
   //console.log(repos);
   let nb = numBranches(repos)
+  parallel = Math.min(parallel, urls.length);
   let par = `${concurrently}  -m ${parallel} `;
 
   console.log(`cloning with ${parallel} concurrent processes ...`);
@@ -393,22 +394,26 @@ function addSubmodules(urls, repos, parallel, depth, submoduleArgs) {
   }
 
   // add submodules sequentially and absorbgitdirs
-  urls.forEach(
-    (url, i) => {
-      let isEmpty = nb[i] === 0;
-      if (isEmpty) {
-        console.log(`Skipping to add repo ${url} because is empty!`)
-      }
-      else {
-        let repoName = repos[i].split('/')[1];
-        let command = `git submodule add ${url} ${submoduleArgs.join(" ")}; git submodule absorbgitdirs ${repoName}`;
-        let result = shell.exec(command, { silent: false });
-        if ((result.code !== 0) || result.error) {
-          shell.echo(`Error: Command "${command}" failed\n${result.stderr}`);
-          console.log(`Skipping to add repo ${url}!\n\n`)
+  console.log(cloneOnly);
+  if (!cloneOnly) {
+    console.log("Inside urls.forEach")
+    urls.forEach(
+      (url, i) => {
+        let isEmpty = nb[i] === 0;
+        if (isEmpty) {
+          console.log(`Skipping to add repo ${url} because is empty!`)
         }
-      }
-    })
+        else {
+          let repoName = repos[i].split('/')[1];
+          let command = `git submodule add ${url} ${submoduleArgs.join(" ")}; git submodule absorbgitdirs ${repoName}`;
+          let result = shell.exec(command, { silent: false });
+          if ((result.code !== 0) || result.error) {
+            shell.echo(`Error: Command "${command}" failed\n${result.stderr}`);
+            console.log(`Skipping to add repo ${url}!\n\n`)
+          }
+        }
+      })
+  }
 
 }
 exports.addSubmodules = addSubmodules;

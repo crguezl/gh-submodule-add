@@ -34,15 +34,16 @@ program.version(require('./package.json').version);
 program
   .name("gh submodule-add [options] [organization] -- [git submodule options]")
   .allowUnknownOption()
-  .option('-d, --debug', 'output extra debugging')
   .option('-s, --search <query>', "search <query> using GitHub Search API. A dot '.' refers to all the repos")
   .option('-r, --regexp <regexp>', 'filter <query> results using <regexp>')
   .option('-c, --csr <comma separated list of repos>', 'the list of repos is specified as a comma separated list')
   .option('-f, --file <file>', 'file with the list of repos, one per line')
   .option('-n --dryrun','just show what repos will be added as submodules')
-  .option('-D --depth <depth>','Create a shallow clone with a history truncated to <depth> number of commits')
+  .option('-C --clone','clone only. Skip submodule adds and aborbgitdirs steps')
   .option('-o --org <org>', 'default organization or user')
-  .option('-p --parallel <int>', 'number of concurrent  processes during the cloning stage', 8);
+  .option('-D --depth <depth>','Create a shallow clone with a history truncated to <depth> number of commits')
+  .option('-d, --debug', 'output extra debugging')
+  .option('-p --parallel <int>', 'number of concurrent  processes during the cloning stage', 2);
 
 program.addHelpText('after', `
   - You can set the default organization through the GITHUB_ORG environment variable
@@ -68,7 +69,7 @@ if (!shell.which('gh')) {
     showError('Sorry, this extension requires GitHub Cli (gh) installed!');
 }
 
-if (!options.dryrun) {
+if (!(options.dryrun ||options.clone)) {
   let isGitFolder = shell.exec("git rev-parse --is-inside-work-tree", {silent: true});
    if (!isGitFolder || !fs.existsSync(".git")) {
     showError('The current folder must be the root of a git repo when running this command!');
@@ -112,7 +113,7 @@ if (options.dryrun) {
 
 let urls = names2urls(repos);
 
-addSubmodules(urls, repos, options.parallel, program.depth, program.args);
+addSubmodules(urls, repos, options.parallel, options.depth, options.clone, program.args);
 
 /*
 
