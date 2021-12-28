@@ -98,7 +98,7 @@ if (options.regexp) {
 
 if (options.dryrun) {
 
-    console.error("Only repos with more than one commit will be added as submodules:")
+    //console.error("Only repos with more than one commit will be added as submodules:")
 
     //console.log(repos);
     let nb = numBranches(repos)
