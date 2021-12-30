@@ -409,7 +409,7 @@ function addSubmodules(urls, repos, parallel, depth, cloneOnly, submoduleArgs) {
   urls.forEach(
     (url, i) => {
       let isEmpty = nb[i] === 0;
-      if (isEmpty) {
+      if (isEmpty && !cloneOnly) {
         console.log(`Skipping to add repo ${url} because is empty!`)
       }
       else {
