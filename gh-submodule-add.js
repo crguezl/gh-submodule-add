@@ -51,7 +51,7 @@ program.addHelpText('after', `
   - You can set the default organization through the GITHUB_ORG environment variable
   - If no repos are specified the selection of repos will be done interactively among the repos in the org 
   - Option '-s' assumes all the repos belong to the same org
-  - The current folder must be the root of a git repo unless option '-n' is used
+  - The current folder must be the root of a git repo unless options '-n' or '-C' are used
 `
 );
   
