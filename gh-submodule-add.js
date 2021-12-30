@@ -14,7 +14,7 @@ const {
   //ghCont, 
   //ghCode, 
   names2urls, 
-  getUserLogin,
+  //getUserLogin,
   //getRepoListFromFile, 
   //getRepoListFromAPISearch,
   //getNumberOfCommits,
@@ -22,6 +22,7 @@ const {
   numBranches,
   //RepoIsEmpty,
   getRepoList,
+  fzfGetOrg,
   //addImplicitOrgIfNeeded,
   addSubmodules
 } = require(path.join(__dirname,'utilities.js'));
@@ -59,8 +60,10 @@ if (process.argv.length === 2) program.help()
 const debug = program.debug; 
 
 const options = program.opts();
-//console.log(options);
-//console.log(program.args)
+console.log(options.search || options.file || options.csr);
+console.log(program.args)
+
+if (!(options.search || options.file || options.csr)) program.help();
 
 if (!shell.which('git')) {
   showError('Sorry, this extension requires git installed!');
@@ -80,7 +83,9 @@ if (!(options.dryrun ||options.clone)) {
 debugger;
 if (!options.org && (program.args.length == 1) ) options.org = program.args.shift();
 
-let org = options.org || process.env["GITHUB_ORG"] || getUserLogin();
+let org = options.org || fzfGetOrg();
+
+
 
 let repos = getRepoList(options, org);
 

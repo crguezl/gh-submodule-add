@@ -331,6 +331,16 @@ function RepoIsEmpty(ownerSlashRepo) {
 }
 exports.RepoIsEmpty = RepoIsEmpty;
 
+function fzfGetOrg() {
+  let command = `gh api --paginate /user/memberships/orgs  --jq '.[].organization | .login' | fzf  --prompt='choose an organization> '`;
+  let orgResult = shell.exec(command, { silent: false });
+  //console.log(orgResult);
+  //console.log(`'${orgResult.stdout}'`);
+  if (orgResult.code == 0) return orgResult.stdout.replace(/\s+/,'');
+  return  process.env["GITHUB_ORG"] || getUserLogin(); 
+}
+exports.fzfGetOrg = fzfGetOrg;
+
 function getRepoList(options, org) {
   let repos;
   if (options.csr)
@@ -367,6 +377,7 @@ function addImplicitOrgIfNeeded(repos, org) {
   return repos;
 }
 exports.addImplicitOrgIfNeeded = addImplicitOrgIfNeeded;
+
 
 function addSubmodules(urls, repos, parallel, depth, cloneOnly, submoduleArgs) {
   //console.log(repos);
@@ -417,3 +428,7 @@ function addSubmodules(urls, repos, parallel, depth, cloneOnly, submoduleArgs) {
 
 }
 exports.addSubmodules = addSubmodules;
+
+
+
+//fzfGetOrg();
