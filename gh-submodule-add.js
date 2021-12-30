@@ -56,7 +56,7 @@ program.addHelpText('after', `
 );
   
 program.parse(process.argv);
-if (process.argv.length === 2) program.help()
+//if (process.argv.length === 2) program.help()
 
 const debug = program.debug; 
 
@@ -76,7 +76,7 @@ if (!shell.which('gh')) {
 if (!(options.dryrun ||options.clone)) {
   let isGitFolder = shell.exec("git rev-parse --is-inside-work-tree", {silent: true});
    if (!isGitFolder || !fs.existsSync(".git")) {
-    showError('The current folder must be the root of a git repo when running this command!');
+    showError('Unless one of the options "-n" or "-C" are used, the current folder must be the root of a git repo when running this command!');
   }
 }
 
