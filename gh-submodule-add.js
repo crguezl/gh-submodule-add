@@ -47,6 +47,8 @@ program
   .option('-p --parallel <int>', 'number of concurrent  processes during the cloning stage', 2);
 
 program.addHelpText('after', `
+  - If the organization is not explicitly specified a fzf with the list of your orgs will be open.
+    Choose one
   - You can set the default organization through the GITHUB_ORG environment variable
   - When using the option '-s', a dot '.' refers to all the repos
   - Option '-s' assumes all the repos belong to the same org
@@ -83,9 +85,7 @@ if (!(options.dryrun ||options.clone)) {
 debugger;
 if (!options.org && (program.args.length == 1) ) options.org = program.args.shift();
 
-let org = options.org || fzfGetOrg();
-
-
+let org = options.org ||  process.env["GITHUB_ORG"] || fzfGetOrg();
 
 let repos = getRepoList(options, org);
 
