@@ -3,6 +3,9 @@
   "version": "1.8.0",
   "description": "",
   "main": "gh-submodule-add.js",
+  "scripts": {
+    "push": "git ci -am 'new version'; git push"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/crguezl/gh-submodule-add.git"
