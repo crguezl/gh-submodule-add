@@ -20,6 +20,7 @@
   "dependencies": {
     "commander": "^8.2.0",
     "concurrently": "^6.3.0",
-    "shelljs": "^0.8.4"
+    "shelljs": "^0.8.4",
+    "tmp": "^0.2.1"
   }
 }

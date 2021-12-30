@@ -1,4 +1,5 @@
 const ins = require("util").inspect;
+const tmp = require('tmp');
 const debug = false;
 const deb = (...args) => {
   if (debug) console.log(ins(...args, { depth: null }));
@@ -109,17 +110,17 @@ function getRepoListFromAPISearch(search, org) {
     }
   }
   `
-   
+
   function executeQuery(query) {
     let command = `gh api graphql --paginate -f query='${query}'`;
     //console.log(command);
-  
+
     let queryResult = shell.exec(command, { silent: true });
     if (queryResult.code !== 0 || queryResult.length === 0) {
       console.error(`No repos found in org "${org}" matching query "${search}"`)
       process.exit(1);
     }
-    return JSON.parse(queryResult).data;  
+    return JSON.parse(queryResult).data;
   }
 
   //console.log('getRepoListFromAPISearch '+search+" "+org)
@@ -131,10 +132,19 @@ function getRepoListFromAPISearch(search, org) {
   try {
     if (search === ".") {
       let queryResult = executeQuery(allRepos(org));
-      let result = queryResult.organization.repositories.edges.map(r => r.node.name).join(",");
-      
-      return result;
-
+      let result = queryResult.organization.repositories.edges.map(r => r.node.name).join("\n");
+      const name = tmp.tmpNameSync();
+      fs.writeFileSync(name, result)
+      //console.log('Created temporary filename: ', name);
+      let command = `cat ${name} | fzf -m --prompt='${org}:Choose repos to download> '`;
+      let fzfresult = shell.exec(command, { silent: false });
+      if (fzfresult.code !== 0) {
+        console.error(`There were errors ${fzfresult.code}`);
+        process.exit(rfzfesult.code);
+      }
+      let repoSpec =  fzfresult.stdout.replace(/\s+$/,'').split(/\s+/).join(',');
+      //console.log(`----\n${repoSpec}\n----`);
+      return repoSpec;
     } else {
       let queryResult = executeQuery(searchForRepos(search, org));
       let result = queryResult.search.edges.map(r => r.node.name).join(",");
@@ -336,10 +346,20 @@ function fzfGetOrg() {
   let orgResult = shell.exec(command, { silent: false });
   //console.log(orgResult);
   //console.log(`'${orgResult.stdout}'`);
-  if (orgResult.code == 0) return orgResult.stdout.replace(/\s+/,'');
-  return  process.env["GITHUB_ORG"] || getUserLogin(); 
+  if (orgResult.code == 0) return orgResult.stdout.replace(/\s+/, '');
+  return process.env["GITHUB_ORG"] || getUserLogin();
 }
 exports.fzfGetOrg = fzfGetOrg;
+
+function fzfGetRepos(org) {
+
+  let command = `gh repo list -L100 ${org} --json name --jq '.[] | .name' | fzf -m`;
+  let result = shell.exec(command, { silent: false });
+  if (result.code !== 0) process.exit(result.code);
+  return result.stdout.replace(/\s+$/,'')  
+}
+exports.fzfGetRepos = fzfGetRepos;
+
 
 function getRepoList(options, org) {
   let repos;
@@ -405,9 +425,9 @@ function addSubmodules(urls, repos, parallel, depth, cloneOnly, submoduleArgs) {
   }
 
   // add submodules sequentially and absorbgitdirs
-  console.log(cloneOnly);
+  // console.log(cloneOnly);
   if (!cloneOnly) {
-    console.log("Inside urls.forEach")
+    // console.log("Inside urls.forEach")
     urls.forEach(
       (url, i) => {
         let isEmpty = nb[i] === 0;
@@ -432,3 +452,4 @@ exports.addSubmodules = addSubmodules;
 
 
 //fzfGetOrg();
+//console.log(fzfGetRepos('ULL-MFP-AET-2122'));

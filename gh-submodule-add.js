@@ -47,10 +47,9 @@ program
   .option('-p --parallel <int>', 'number of concurrent  processes during the cloning stage', 2);
 
 program.addHelpText('after', `
-  - If the organization is not explicitly specified a fzf with the list of your orgs will be open.
-    Choose one
+  - If the organization is not explicitly specified the selection will be done interactively among the list of your organizations
   - You can set the default organization through the GITHUB_ORG environment variable
-  - When using the option '-s', a dot '.' refers to all the repos
+  - If no repos are specified the selection of repos will be done interactively among the repos in the org 
   - Option '-s' assumes all the repos belong to the same org
   - The current folder must be the root of a git repo unless option '-n' is used
 `
@@ -62,10 +61,10 @@ if (process.argv.length === 2) program.help()
 const debug = program.debug; 
 
 const options = program.opts();
-console.log(options.search || options.file || options.csr);
-console.log(program.args)
+// console.log(options.search || options.file || options.csr);
+// console.log(program.args)
 
-if (!(options.search || options.file || options.csr)) program.help();
+if (!(options.search || options.file || options.csr)) options.search = '.';
 
 if (!shell.which('git')) {
   showError('Sorry, this extension requires git installed!');
