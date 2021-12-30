@@ -49,7 +49,6 @@ cloning with 2 concurrent processes ...
 [2] Clonando en 'latex-markdown-anabel-coello-perez-alu0100885200'...
 [1] git clone https://github.com/ULL-MFP-AET-2122/latex-markdown-adela-gonzalez-maury-alu0101116204.git exited with code 0
 [2] git clone https://github.com/ULL-MFP-AET-2122/latex-markdown-anabel-coello-perez-alu0100885200.git exited with code 0
-true
 ```
 
 ## See also
