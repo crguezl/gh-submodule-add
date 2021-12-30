@@ -28,19 +28,13 @@ Options:
   -d, --debug                                output extra debugging
   -p --parallel <int>                        number of concurrent  processes during the cloning stage (default: 2)
   -h, --help                                 display help for command
-
-  - If the organization is not explicitly specified the selection will be done interactively among the list of your organizations
-  - You can set the default organization through the GITHUB_ORG environment variable
-  - If no repos are specified the selection of repos will be done interactively among the repos in the org
-  - Option '-s' assumes all the repos belong to the same org
-  - The current folder must be the root of a git repo unless options '-n' or '-C' are used
 ```
 
-  - You can set the default organization through the GITHUB_ORG environment variable
-  - When using the option '-s', a dot '.' refers to all the repos
-  - Option '-s' works only when all the repos belong to the same org
-  - Use of one and only one of the options '-s' or '-c'  or '-f' it is required
-  - The current folder must be the root of a git repo unless option '-n' is used
+- If the organization is not explicitly specified the selection will be done interactively among the list of your organizations
+- You can set the default organization through the GITHUB_ORG environment variable
+- If no repos are specified the selection of repos will be done interactively among the repos in the org
+- Option '-s' assumes all the repos belong to the same org
+- The current folder must be the root of a git repo unless options '-n' or '-C' are used
 
 ## Examples
 
