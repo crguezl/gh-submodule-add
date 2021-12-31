@@ -23,6 +23,7 @@
   "dependencies": {
     "@crguezl/gh-utilities": "^3.1.0",
     "commander": "^8.2.0",
+    "concurrently": "^6.3.0",
     "shelljs": "^0.8.4"
   }
 }
