@@ -25,7 +25,7 @@ const {
   fzfGetOrg,
   //addImplicitOrgIfNeeded,
   addSubmodules
-} = require(path.join(__dirname,'utilities.js'));
+} = require('@crguezl/gh-utilities');
 
 const { Command } = require('commander');
 
@@ -41,7 +41,7 @@ program
   .option('-f, --file <file>', 'file with the list of repos, one per line')
   .option('-n --dryrun','just show what repos will be added as submodules')
   .option('-C --clone','clone only. Skip submodule adds and aborbgitdirs steps')
-  .option('-o --org <org>', 'default organization or user')
+  .option('-o --org <org>', 'organization or user')
   .option('-D --depth <depth>','Create a shallow clone with a history truncated to <depth> number of commits')
   .option('-d, --debug', 'output extra debugging')
   .option('-p --parallel <int>', 'number of concurrent  processes during the cloning stage', 2);

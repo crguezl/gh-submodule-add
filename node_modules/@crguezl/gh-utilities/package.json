@@ -1,0 +1,28 @@
+{
+  "name": "@crguezl/gh-utilities",
+  "version": "3.0.0",
+  "description": "",
+  "main": "utilities.js",
+  "scripts": {
+    "push": "git ci -am 'new version'; git push"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crguezl/gh-utilities.git"
+  },
+  "keywords": [
+    "gh-extension",
+    "ULL"
+  ],
+  "author": "Casiano Rodriguez Leon <crguezl@ull.edu.es> (https://crguezl.github.io/)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/crguezl/gh-utilities/issues"
+  },
+  "homepage": "https://github.com/crguezl/gh-utilities#readme",
+  "dependencies": {
+    "concurrently": "^6.3.0",
+    "shelljs": "^0.8.4",
+    "tmp": "^0.2.1"
+  }
+}

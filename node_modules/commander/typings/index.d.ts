@@ -214,8 +214,9 @@ export interface OutputConfiguration {
 
 }
 
-type AddHelpTextPosition = 'beforeAll' | 'before' | 'after' | 'afterAll';
-type HookEvent = 'preAction' | 'postAction';
+export type AddHelpTextPosition = 'beforeAll' | 'before' | 'after' | 'afterAll';
+export type HookEvent = 'preAction' | 'postAction';
+export type OptionValueSource = 'default' | 'env' | 'config' | 'cli';
 
 export interface OptionValues {
   [key: string]: any;
@@ -424,10 +425,10 @@ export class Command {
    * @example
    * ```
    * program
-   *   .command('help')
-   *   .description('display verbose help')
+   *   .command('serve')
+   *   .description('start service')
    *   .action(function() {
-   *     // output help here
+   *     // do work here
    *   });
    * ```
    *
@@ -526,12 +527,22 @@ export class Command {
    */
   getOptionValue(key: string): any;
 
-   /**
+  /**
    * Store option value.
    */
   setOptionValue(key: string, value: unknown): this;
 
   /**
+   * Store option value and where the value came from.
+   */
+  setOptionValueWithSource(key: string, value: unknown, source: OptionValueSource): this;
+
+  /**
+   * Retrieve option value source.
+   */
+  getOptionValueSource(key: string): OptionValueSource;
+
+   /**
    * Alter parsing of short flags with optional values.
    *
    * @example

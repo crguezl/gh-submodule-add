@@ -136,32 +136,33 @@ var formatDistanceLocale = {
     other: 'gotovo {{count}} godina'
   }
 };
-export default function formatDistance(token, count, options) {
-  options = options || {};
-  var result;
 
-  if (typeof formatDistanceLocale[token] === 'string') {
-    result = formatDistanceLocale[token];
+var formatDistance = function (token, count, options) {
+  var result;
+  var tokenValue = formatDistanceLocale[token];
+
+  if (typeof tokenValue === 'string') {
+    result = tokenValue;
   } else if (count === 1) {
-    if (options.addSuffix) {
-      if (options.comparison > 0) {
-        result = formatDistanceLocale[token].one.withPrepositionIn;
+    if (options !== null && options !== void 0 && options.addSuffix) {
+      if (options.comparison && options.comparison > 0) {
+        result = tokenValue.one.withPrepositionIn;
       } else {
-        result = formatDistanceLocale[token].one.withPrepositionAgo;
+        result = tokenValue.one.withPrepositionAgo;
       }
     } else {
-      result = formatDistanceLocale[token].one.standalone;
+      result = tokenValue.one.standalone;
     }
   } else if (count % 10 > 1 && count % 10 < 5 && // if last digit is between 2 and 4
   String(count).substr(-2, 1) !== '1' // unless the 2nd to last digit is "1"
   ) {
-      result = formatDistanceLocale[token].dual.replace('{{count}}', count);
+      result = tokenValue.dual.replace('{{count}}', String(count));
     } else {
-    result = formatDistanceLocale[token].other.replace('{{count}}', count);
+    result = tokenValue.other.replace('{{count}}', String(count));
   }
 
-  if (options.addSuffix) {
-    if (options.comparison > 0) {
+  if (options !== null && options !== void 0 && options.addSuffix) {
+    if (options.comparison && options.comparison > 0) {
       return 'za ' + result;
     } else {
       return 'prije ' + result;
@@ -169,4 +170,6 @@ export default function formatDistance(token, count, options) {
   }
 
   return result;
-}
+};
+
+export default formatDistance;
