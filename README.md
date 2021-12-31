@@ -23,7 +23,7 @@ Options:
   -f, --file <file>                          file with the list of repos, one per line
   -n --dryrun                                just show what repos will be added as submodules
   -C --clone                                 clone only. Skip submodule adds and aborbgitdirs steps
-  -o --org <org>                             default organization or user
+  -o --org <org>                             organization
   -D --depth <depth>                         Create a shallow clone with a history truncated to <depth> number of commits
   -d, --debug                                output extra debugging
   -p --parallel <int>                        number of concurrent  processes during the cloning stage (default: 2)
