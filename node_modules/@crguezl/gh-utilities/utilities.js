@@ -380,7 +380,8 @@ function fzfGetOrg() {
   //console.log(`'${orgResult.stdout}'`);
   if (orgResult.code == 0) return orgResult.stdout.replace(/\s+/, '');
   if (process.env["GITHUB_ORG"])  return process.env["GITHUB_ORG"];
-  throw "Provide a GitHub Organization";
+  console.error("Please, provide a GitHub Organization to work with!");
+  process.exit(0);
 }
 exports.fzfGetOrg = fzfGetOrg;
 
@@ -424,7 +425,7 @@ function addImplicitOrgIfNeeded(repos, org) {
 exports.addImplicitOrgIfNeeded = addImplicitOrgIfNeeded;
 
 
-function addSubmodules(urls, repos, parallel, depth, cloneOnly, submoduleArgs) {
+function addSubmodules({urls, repos, parallel, depth, cloneOnly, submoduleArgs=[], cloneArgs}) {
   //console.log(repos);
   let nb = numBranches(repos)
   parallel = Math.min(parallel, urls.length);
@@ -438,7 +439,7 @@ function addSubmodules(urls, repos, parallel, depth, cloneOnly, submoduleArgs) {
         console.log(`Skipping to add repo ${url} because is empty!`)
       }
       else {
-        let command = ` "git clone ${url}"`;
+        let command = ` "git clone ${url} ${cloneArgs.join(' ')}"`;
         if (depth) command += ` --depth ${depth}`
         par += command;
       }
@@ -450,9 +451,9 @@ function addSubmodules(urls, repos, parallel, depth, cloneOnly, submoduleArgs) {
   }
 
   // add submodules sequentially and absorbgitdirs
-  // console.log(cloneOnly);
+  console.log(cloneOnly);
   if (!cloneOnly) {
-    // console.log("Inside urls.forEach")
+    console.log("Inside urls.forEach")
     urls.forEach(
       (url, i) => {
         let isEmpty = nb[i] === 0;

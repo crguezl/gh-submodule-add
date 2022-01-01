@@ -117,7 +117,15 @@ if (options.dryrun) {
 
 let urls = names2urls(repos);
 
-addSubmodules(urls, repos, options.parallel, options.depth, options.clone, program.args);
+addSubmodules({
+  urls, 
+  repos, 
+  parallel: options.parallel, 
+  depth: options.depth, 
+  cloneOnly: options.clone, 
+  submoduleArgs: program.args,
+  cloneArgs: []
+});
 
 /*
 

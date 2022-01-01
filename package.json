@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/crguezl/gh-submodule-add#readme",
   "dependencies": {
-    "@crguezl/gh-utilities": "^3.1.0",
+    "@crguezl/gh-utilities": "^3.2.0",
     "commander": "^8.2.0",
     "shelljs": "^0.8.4"
   }
