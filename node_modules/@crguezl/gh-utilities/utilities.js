@@ -74,6 +74,26 @@ function getUserLogin() {
 }
 exports.getUserLogin = getUserLogin;
 
+function getDefaultOrg() {
+  let checkCommand = `gh config get 'current-org'`;
+  let getResult = shell.exec(checkCommand, { silent: true });
+  let defaultOrg = getResult.stdout.replace(/\s+$/,'');
+  return defaultOrg;
+}
+exports.getDefaultOrg = getDefaultOrg;
+
+function setDefaultOrg(org) {
+  let setCommand = `gh config set 'current-org' '${org}'`;
+  let setResult = shell.exec(setCommand, { silent: true });
+  //console.log(setResult);
+
+  let defaultOrg = getDefaultOrg();
+  
+  return defaultOrg == org;
+}
+exports.setDefaultOrg = setDefaultOrg;
+
+
 function getRepoListFromAPISearch(options, org) {
   let search = options.search;
   let regexp = options.regexp;
@@ -374,12 +394,16 @@ function RepoIsEmpty(ownerSlashRepo) {
 exports.RepoIsEmpty = RepoIsEmpty;
 
 function fzfGetOrg() {
+  // if (process.env["GITHUB_ORG"])  return process.env["GITHUB_ORG"];
+  let defaultOrg = getDefaultOrg();
+  if (defaultOrg && defaultOrg.length) return defaultOrg;
+
   let command = `gh api --paginate /user/memberships/orgs  --jq '.[].organization | .login' | fzf  --prompt='Choose an organization> ' --layout=reverse --border`;
   let orgResult = shell.exec(command, { silent: false });
   //console.log(orgResult);
   //console.log(`'${orgResult.stdout}'`);
   if (orgResult.code == 0) return orgResult.stdout.replace(/\s+/, '');
-  if (process.env["GITHUB_ORG"])  return process.env["GITHUB_ORG"];
+
   console.error("Please, provide a GitHub Organization to work with!");
   process.exit(0);
 }
@@ -479,3 +503,4 @@ exports.addSubmodules = addSubmodules;
 
 //fzfGetOrg();
 //getRepoListFromAPISearch('.', 'ULL-ESIT-DMSI-1920')
+//console.log(setDefaultOrg('ULL-MFP-AET-2122'));

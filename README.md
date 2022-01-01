@@ -12,28 +12,29 @@ gh extension install crguezl/gh-submodule-add
 ## Usage
 
 ```
-➜  aprender-markdown git:(master) ✗ gh help submodule-add
-Usage: gh submodule-add [options] [organization] -- [git submodule options] [options]
+Usage: gh submodule-add [options] [organization] -- [git submodule options]
 
 Options:
   -V, --version                              output the version number
-  -s, --search <query>                       search <query> using GitHub Search API. A dot '.' refers to all the repos
+  -s, --search <query>                       search <query> using GitHub Search API
   -r, --regexp <regexp>                      filter <query> results using <regexp>
   -c, --csr <comma separated list of repos>  the list of repos is specified as a comma separated list
   -f, --file <file>                          file with the list of repos, one per line
   -n --dryrun                                just show what repos will be added as submodules
   -C --clone                                 clone only. Skip submodule adds and aborbgitdirs steps
-  -o --org <org>                             organization
+  -o --org <org>                             organization or user
+     --default                               Implies "-o <org>". Set "org" as default organization for future uses
   -D --depth <depth>                         Create a shallow clone with a history truncated to <depth> number of commits
   -d, --debug                                output extra debugging
   -p --parallel <int>                        number of concurrent  processes during the cloning stage (default: 2)
   -h, --help                                 display help for command
 ```
 
-- If the organization is not explicitly specified the selection will be done interactively among the list of your organizations
-- You can set the default organization through the GITHUB_ORG environment variable
+- If the organization is not explicitly specified, the selection will be done interactively among the list of your organizations
+- You can set the default organization through the "--default" option for future uses of this program
 - If no repos are specified the selection of repos will be done interactively among the repos in the org
 - Option '-s' assumes all the repos belong to the same org
+- When called with option  '-s .', the dot '.' refers to all the repos.  fzf will be open to select the repos
 - The current folder must be the root of a git repo unless options '-n' or '-C' are used
 
 ## Examples
@@ -54,3 +55,4 @@ cloning with 2 concurrent processes ...
 ## See also
 
 * [gh extension to remove submodules](https://github.com/crguezl/gh-submodule-rm/blob/main/gh-submodule-rm)
+* [gh crguezl/org-clone](https://github.com/crguezl/gh-org-clone)
