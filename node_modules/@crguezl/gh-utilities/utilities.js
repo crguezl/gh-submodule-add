@@ -169,7 +169,7 @@ function getRepoListFromAPISearch(options, org) {
     fs.writeFileSync(name, result)
 
     //console.log('Created temporary filename: ', name);
-    let command = `cat ${name} | fzf -m --prompt='${org}:Use tab to choose repos to download> ' --layout=reverse --border`;
+    let command = `cat ${name} | fzf -m --bind 'ctrl-a:toggle-all' --prompt='${org}:Use tab to choose repos to download> ' --layout=reverse --border`;
     let fzfresult = shell.exec(command, { silent: false });
     console.clear();
 

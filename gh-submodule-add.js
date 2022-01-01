@@ -57,6 +57,7 @@ program.addHelpText('after', `
   - Option '-s' assumes all the repos belong to the same org
   - When called with option  '-s .', the dot '.' refers to all the repos.  fzf will be open to select the repos
   - The current folder must be the root of a git repo unless options '-n' or '-C' are used
+  - When in fzf, use CTRL-A to select all, tab to select/deselect
 `
 );
   
