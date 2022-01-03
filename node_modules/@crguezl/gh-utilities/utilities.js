@@ -6,7 +6,9 @@ const deb = (...args) => {
 };
 const fs = require("fs");
 const shell = require('shelljs');
-const path = require('path');
+//const path = require('path');
+const balanced = require('balanced-match');
+
 
 const concurrently = 'npx concurrently';
 //console.log(concurrently);
@@ -142,7 +144,27 @@ function getRepoListFromAPISearch(options, org) {
       console.error(`No repos found in org "${org}" matching query "${search}"`)
       process.exit(1);
     }
-    return JSON.parse(queryResult).data;
+
+    /**************************/
+    let rout = queryResult.stdout;
+
+    //console.log(rout);
+
+    let chunkInfo, dummy = { data:  { organization: { repositories: { edges: []}}}};
+    let result = [];
+
+    while (chunkInfo = balanced('{', '}', rout)) {
+      //console.log(chunkInfo);
+      let currentObj = JSON.parse('{'+chunkInfo.body+'}');
+      //console.log(currentObj); 
+      result = result.concat(currentObj.data.organization.repositories.edges);  
+      rout = chunkInfo.post;
+    }
+    dummy.data.organization.repositories.edges = result;
+    //console.log(ins(dummy, {depth:null}));
+    //process.exit(0);
+
+    return dummy.data;
   }
 
   function fzfGetRepos(org, regexp) {
@@ -155,6 +177,7 @@ function getRepoListFromAPISearch(options, org) {
   
     let queryResult = executeQuery(allRepos(org));
     let result = queryResult.organization.repositories.edges.map(r => r.node.name);
+    //console.log(`Inside fzfGetRepos(${org}, ${regexp}) called executeQuery. Result = ${ins(result, { depth: null})}`);
 
     if (regexp) {
       regexp = new RegExp(regexp,'i');
@@ -423,7 +446,7 @@ function getRepoList(options, org) {
   else {
     repos = getRepoListFromAPISearch('.', org);
   }
-  repos = repos.length ? repos.split(/\s*,\s*/) : [];
+  repos = (repos && repos.length) ? repos.split(/\s*,\s*/) : [];
   repos = addImplicitOrgIfNeeded(repos, org);
 
   return repos;
