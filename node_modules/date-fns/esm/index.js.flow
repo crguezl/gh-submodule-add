@@ -401,6 +401,8 @@ declare module.exports: {
 
   getDecade: (date: Date | number) => number,
 
+  getDefaultOptions: () => Object,
+
   getHours: (date: Date | number) => number,
 
   getISODay: (date: Date | number) => number,
@@ -493,6 +495,18 @@ declare module.exports: {
     },
     localeOptions?: {
       locale?: string | string[],
+    }
+  ) => string,
+
+  intlFormatDistance: (
+    date: Date | number,
+    baseDate: Date | number,
+    options?: {
+      unit?: string,
+      locale?: string | string[],
+      localeMatcher?: string,
+      numeric?: string,
+      style?: string,
     }
   ) => string,
 
@@ -717,6 +731,7 @@ declare module.exports: {
     date: Date | number,
     options?: {
       nearestTo?: number,
+      roundingMethod?: string,
     }
   ) => Date,
 
@@ -751,6 +766,12 @@ declare module.exports: {
   ) => Date,
 
   setDayOfYear: (date: Date | number, dayOfYear: number) => Date,
+
+  setDefaultOptions: (newOptions: {
+    locale?: Locale,
+    weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6,
+    firstWeekContainsDate?: 1 | 2 | 3 | 4 | 5 | 6 | 7,
+  }) => void,
 
   setHours: (date: Date | number, hours: number) => Date,
 
@@ -869,6 +890,8 @@ declare module.exports: {
 
   daysInWeek: number,
 
+  daysInYear: number,
+
   maxTime: number,
 
   millisecondsInMinute: number,
@@ -890,4 +913,14 @@ declare module.exports: {
   secondsInHour: number,
 
   secondsInMinute: number,
+
+  secondsInDay: number,
+
+  secondsInWeek: number,
+
+  secondsInYear: number,
+
+  secondsInMonth: number,
+
+  secondsInQuarter: number,
 }

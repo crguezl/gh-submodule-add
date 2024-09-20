@@ -9,6 +9,12 @@ If `-C` is omitted and the command is executed inside a repo, the cloned repos w
 gh extension install crguezl/gh-submodule-add
 ```
 
+or you can use this other location:
+  
+```
+gh extension install gh-cli-for-education/gh-submodule-add
+```
+
 ## Requirements
 
 Node.js has to be installed.

@@ -1,4 +1,4 @@
-// This file is generated automatically by `scripts/build/indices.js`. Please, don't change it.
+// This file is generated automatically by `scripts/build/indices.ts`. Please, don't change it.
 export { default as af } from "./af/index.js";
 export { default as ar } from "./ar/index.js";
 export { default as arDZ } from "./ar-DZ/index.js";
@@ -8,6 +8,7 @@ export { default as arSA } from "./ar-SA/index.js";
 export { default as arTN } from "./ar-TN/index.js";
 export { default as az } from "./az/index.js";
 export { default as be } from "./be/index.js";
+export { default as beTarask } from "./be-tarask/index.js";
 export { default as bg } from "./bg/index.js";
 export { default as bn } from "./bn/index.js";
 export { default as bs } from "./bs/index.js";
@@ -48,6 +49,7 @@ export { default as hy } from "./hy/index.js";
 export { default as id } from "./id/index.js";
 export { default as is } from "./is/index.js";
 export { default as it } from "./it/index.js";
+export { default as itCH } from "./it-CH/index.js";
 export { default as ja } from "./ja/index.js";
 export { default as jaHira } from "./ja-Hira/index.js";
 export { default as ka } from "./ka/index.js";
@@ -66,6 +68,7 @@ export { default as nb } from "./nb/index.js";
 export { default as nl } from "./nl/index.js";
 export { default as nlBE } from "./nl-BE/index.js";
 export { default as nn } from "./nn/index.js";
+export { default as oc } from "./oc/index.js";
 export { default as pl } from "./pl/index.js";
 export { default as pt } from "./pt/index.js";
 export { default as ptBR } from "./pt-BR/index.js";

@@ -527,6 +527,9 @@ declare module 'date-fns' {
   function getDecade(date: Date | number): number
   namespace getDecade {}
 
+  function getDefaultOptions(): Object
+  namespace getDefaultOptions {}
+
   function getHours(date: Date | number): number
   namespace getHours {}
 
@@ -644,6 +647,19 @@ declare module 'date-fns' {
     }
   ): string
   namespace intlFormat {}
+
+  function intlFormatDistance(
+    date: Date | number,
+    baseDate: Date | number,
+    options?: {
+      unit?: string
+      locale?: string | string[]
+      localeMatcher?: string
+      numeric?: string
+      style?: string
+    }
+  ): string
+  namespace intlFormatDistance {}
 
   function isAfter(date: Date | number, dateToCompare: Date | number): boolean
   namespace isAfter {}
@@ -969,6 +985,7 @@ declare module 'date-fns' {
     date: Date | number,
     options?: {
       nearestTo?: number
+      roundingMethod?: string
     }
   ): Date
   namespace roundToNearestMinutes {}
@@ -1011,6 +1028,13 @@ declare module 'date-fns' {
 
   function setDayOfYear(date: Date | number, dayOfYear: number): Date
   namespace setDayOfYear {}
+
+  function setDefaultOptions(newOptions: {
+    locale?: Locale
+    weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6
+    firstWeekContainsDate?: 1 | 2 | 3 | 4 | 5 | 6 | 7
+  }): void
+  namespace setDefaultOptions {}
 
   function setHours(date: Date | number, hours: number): Date
   namespace setHours {}
@@ -1172,6 +1196,8 @@ declare module 'date-fns' {
 
   const daysInWeek: number
 
+  const daysInYear: number
+
   const maxTime: number
 
   const millisecondsInMinute: number
@@ -1193,6 +1219,79 @@ declare module 'date-fns' {
   const secondsInHour: number
 
   const secondsInMinute: number
+
+  const secondsInDay: number
+
+  const secondsInWeek: number
+
+  const secondsInYear: number
+
+  const secondsInMonth: number
+
+  const secondsInQuarter: number
+}
+
+declare module 'date-fns/constants' {
+  export const daysInWeek: number
+  export const daysInYear: number
+  export const maxTime: number
+  export const millisecondsInMinute: number
+  export const millisecondsInHour: number
+  export const millisecondsInSecond: number
+  export const minTime: number
+  export const minutesInHour: number
+  export const monthsInQuarter: number
+  export const monthsInYear: number
+  export const quartersInYear: number
+  export const secondsInHour: number
+  export const secondsInMinute: number
+  export const secondsInDay: number
+  export const secondsInWeek: number
+  export const secondsInYear: number
+  export const secondsInMonth: number
+  export const secondsInQuarter: number
+}
+
+declare module 'date-fns/constants/index' {
+  export const daysInWeek: number
+  export const daysInYear: number
+  export const maxTime: number
+  export const millisecondsInMinute: number
+  export const millisecondsInHour: number
+  export const millisecondsInSecond: number
+  export const minTime: number
+  export const minutesInHour: number
+  export const monthsInQuarter: number
+  export const monthsInYear: number
+  export const quartersInYear: number
+  export const secondsInHour: number
+  export const secondsInMinute: number
+  export const secondsInDay: number
+  export const secondsInWeek: number
+  export const secondsInYear: number
+  export const secondsInMonth: number
+  export const secondsInQuarter: number
+}
+
+declare module 'date-fns/constants/index.js' {
+  export const daysInWeek: number
+  export const daysInYear: number
+  export const maxTime: number
+  export const millisecondsInMinute: number
+  export const millisecondsInHour: number
+  export const millisecondsInSecond: number
+  export const minTime: number
+  export const minutesInHour: number
+  export const monthsInQuarter: number
+  export const monthsInYear: number
+  export const quartersInYear: number
+  export const secondsInHour: number
+  export const secondsInMinute: number
+  export const secondsInDay: number
+  export const secondsInWeek: number
+  export const secondsInYear: number
+  export const secondsInMonth: number
+  export const secondsInQuarter: number
 }
 
 declare module 'date-fns/add' {
@@ -1595,6 +1694,11 @@ declare module 'date-fns/getDecade' {
   export default getDecade
 }
 
+declare module 'date-fns/getDefaultOptions' {
+  import { getDefaultOptions } from 'date-fns'
+  export default getDefaultOptions
+}
+
 declare module 'date-fns/getHours' {
   import { getHours } from 'date-fns'
   export default getHours
@@ -1708,6 +1812,11 @@ declare module 'date-fns/intervalToDuration' {
 declare module 'date-fns/intlFormat' {
   import { intlFormat } from 'date-fns'
   export default intlFormat
+}
+
+declare module 'date-fns/intlFormatDistance' {
+  import { intlFormatDistance } from 'date-fns'
+  export default intlFormatDistance
 }
 
 declare module 'date-fns/isAfter' {
@@ -2158,6 +2267,11 @@ declare module 'date-fns/setDay' {
 declare module 'date-fns/setDayOfYear' {
   import { setDayOfYear } from 'date-fns'
   export default setDayOfYear
+}
+
+declare module 'date-fns/setDefaultOptions' {
+  import { setDefaultOptions } from 'date-fns'
+  export default setDefaultOptions
 }
 
 declare module 'date-fns/setHours' {
@@ -2775,6 +2889,11 @@ declare module 'date-fns/getDecade/index' {
   export default getDecade
 }
 
+declare module 'date-fns/getDefaultOptions/index' {
+  import { getDefaultOptions } from 'date-fns'
+  export default getDefaultOptions
+}
+
 declare module 'date-fns/getHours/index' {
   import { getHours } from 'date-fns'
   export default getHours
@@ -2888,6 +3007,11 @@ declare module 'date-fns/intervalToDuration/index' {
 declare module 'date-fns/intlFormat/index' {
   import { intlFormat } from 'date-fns'
   export default intlFormat
+}
+
+declare module 'date-fns/intlFormatDistance/index' {
+  import { intlFormatDistance } from 'date-fns'
+  export default intlFormatDistance
 }
 
 declare module 'date-fns/isAfter/index' {
@@ -3338,6 +3462,11 @@ declare module 'date-fns/setDay/index' {
 declare module 'date-fns/setDayOfYear/index' {
   import { setDayOfYear } from 'date-fns'
   export default setDayOfYear
+}
+
+declare module 'date-fns/setDefaultOptions/index' {
+  import { setDefaultOptions } from 'date-fns'
+  export default setDefaultOptions
 }
 
 declare module 'date-fns/setHours/index' {
@@ -3955,6 +4084,11 @@ declare module 'date-fns/getDecade/index.js' {
   export default getDecade
 }
 
+declare module 'date-fns/getDefaultOptions/index.js' {
+  import { getDefaultOptions } from 'date-fns'
+  export default getDefaultOptions
+}
+
 declare module 'date-fns/getHours/index.js' {
   import { getHours } from 'date-fns'
   export default getHours
@@ -4068,6 +4202,11 @@ declare module 'date-fns/intervalToDuration/index.js' {
 declare module 'date-fns/intlFormat/index.js' {
   import { intlFormat } from 'date-fns'
   export default intlFormat
+}
+
+declare module 'date-fns/intlFormatDistance/index.js' {
+  import { intlFormatDistance } from 'date-fns'
+  export default intlFormatDistance
 }
 
 declare module 'date-fns/isAfter/index.js' {
@@ -4518,6 +4657,11 @@ declare module 'date-fns/setDay/index.js' {
 declare module 'date-fns/setDayOfYear/index.js' {
   import { setDayOfYear } from 'date-fns'
   export default setDayOfYear
+}
+
+declare module 'date-fns/setDefaultOptions/index.js' {
+  import { setDefaultOptions } from 'date-fns'
+  export default setDefaultOptions
 }
 
 declare module 'date-fns/setHours/index.js' {
@@ -5361,6 +5505,23 @@ declare module 'date-fns/fp' {
   >
   namespace intlFormat {}
 
+  const intlFormatDistance: CurriedFn2<Date | number, Date | number, string>
+  namespace intlFormatDistance {}
+
+  const intlFormatDistanceWithOptions: CurriedFn3<
+    {
+      style?: string
+      numeric?: string
+      localeMatcher?: string
+      locale?: string | string[]
+      unit?: string
+    },
+    Date | number,
+    Date | number,
+    string
+  >
+  namespace intlFormatDistanceWithOptions {}
+
   const isAfter: CurriedFn2<Date | number, Date | number, boolean>
   namespace isAfter {}
 
@@ -5641,6 +5802,7 @@ declare module 'date-fns/fp' {
 
   const roundToNearestMinutesWithOptions: CurriedFn2<
     {
+      roundingMethod?: string
       nearestTo?: number
     },
     Date | number,
@@ -5859,6 +6021,8 @@ declare module 'date-fns/fp' {
 
   const daysInWeek: number
 
+  const daysInYear: number
+
   const maxTime: number
 
   const millisecondsInMinute: number
@@ -5880,6 +6044,16 @@ declare module 'date-fns/fp' {
   const secondsInHour: number
 
   const secondsInMinute: number
+
+  const secondsInDay: number
+
+  const secondsInWeek: number
+
+  const secondsInYear: number
+
+  const secondsInMonth: number
+
+  const secondsInQuarter: number
 }
 
 declare module 'date-fns/fp/add' {
@@ -6495,6 +6669,16 @@ declare module 'date-fns/fp/intervalToDuration' {
 declare module 'date-fns/fp/intlFormat' {
   import { intlFormat } from 'date-fns/fp'
   export default intlFormat
+}
+
+declare module 'date-fns/fp/intlFormatDistance' {
+  import { intlFormatDistance } from 'date-fns/fp'
+  export default intlFormatDistance
+}
+
+declare module 'date-fns/fp/intlFormatDistanceWithOptions' {
+  import { intlFormatDistanceWithOptions } from 'date-fns/fp'
+  export default intlFormatDistanceWithOptions
 }
 
 declare module 'date-fns/fp/isAfter' {
@@ -7757,6 +7941,16 @@ declare module 'date-fns/fp/intlFormat/index' {
   export default intlFormat
 }
 
+declare module 'date-fns/fp/intlFormatDistance/index' {
+  import { intlFormatDistance } from 'date-fns/fp'
+  export default intlFormatDistance
+}
+
+declare module 'date-fns/fp/intlFormatDistanceWithOptions/index' {
+  import { intlFormatDistanceWithOptions } from 'date-fns/fp'
+  export default intlFormatDistanceWithOptions
+}
+
 declare module 'date-fns/fp/isAfter/index' {
   import { isAfter } from 'date-fns/fp'
   export default isAfter
@@ -9017,6 +9211,16 @@ declare module 'date-fns/fp/intlFormat/index.js' {
   export default intlFormat
 }
 
+declare module 'date-fns/fp/intlFormatDistance/index.js' {
+  import { intlFormatDistance } from 'date-fns/fp'
+  export default intlFormatDistance
+}
+
+declare module 'date-fns/fp/intlFormatDistanceWithOptions/index.js' {
+  import { intlFormatDistanceWithOptions } from 'date-fns/fp'
+  export default intlFormatDistanceWithOptions
+}
+
 declare module 'date-fns/fp/isAfter/index.js' {
   import { isAfter } from 'date-fns/fp'
   export default isAfter
@@ -10099,6 +10303,9 @@ declare module 'date-fns/esm' {
   function getDecade(date: Date | number): number
   namespace getDecade {}
 
+  function getDefaultOptions(): Object
+  namespace getDefaultOptions {}
+
   function getHours(date: Date | number): number
   namespace getHours {}
 
@@ -10216,6 +10423,19 @@ declare module 'date-fns/esm' {
     }
   ): string
   namespace intlFormat {}
+
+  function intlFormatDistance(
+    date: Date | number,
+    baseDate: Date | number,
+    options?: {
+      unit?: string
+      locale?: string | string[]
+      localeMatcher?: string
+      numeric?: string
+      style?: string
+    }
+  ): string
+  namespace intlFormatDistance {}
 
   function isAfter(date: Date | number, dateToCompare: Date | number): boolean
   namespace isAfter {}
@@ -10541,6 +10761,7 @@ declare module 'date-fns/esm' {
     date: Date | number,
     options?: {
       nearestTo?: number
+      roundingMethod?: string
     }
   ): Date
   namespace roundToNearestMinutes {}
@@ -10583,6 +10804,13 @@ declare module 'date-fns/esm' {
 
   function setDayOfYear(date: Date | number, dayOfYear: number): Date
   namespace setDayOfYear {}
+
+  function setDefaultOptions(newOptions: {
+    locale?: Locale
+    weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6
+    firstWeekContainsDate?: 1 | 2 | 3 | 4 | 5 | 6 | 7
+  }): void
+  namespace setDefaultOptions {}
 
   function setHours(date: Date | number, hours: number): Date
   namespace setHours {}
@@ -10744,6 +10972,8 @@ declare module 'date-fns/esm' {
 
   const daysInWeek: number
 
+  const daysInYear: number
+
   const maxTime: number
 
   const millisecondsInMinute: number
@@ -10765,6 +10995,16 @@ declare module 'date-fns/esm' {
   const secondsInHour: number
 
   const secondsInMinute: number
+
+  const secondsInDay: number
+
+  const secondsInWeek: number
+
+  const secondsInYear: number
+
+  const secondsInMonth: number
+
+  const secondsInQuarter: number
 }
 
 declare module 'date-fns/esm/add' {
@@ -11167,6 +11407,11 @@ declare module 'date-fns/esm/getDecade' {
   export default getDecade
 }
 
+declare module 'date-fns/esm/getDefaultOptions' {
+  import { getDefaultOptions } from 'date-fns/esm'
+  export default getDefaultOptions
+}
+
 declare module 'date-fns/esm/getHours' {
   import { getHours } from 'date-fns/esm'
   export default getHours
@@ -11280,6 +11525,11 @@ declare module 'date-fns/esm/intervalToDuration' {
 declare module 'date-fns/esm/intlFormat' {
   import { intlFormat } from 'date-fns/esm'
   export default intlFormat
+}
+
+declare module 'date-fns/esm/intlFormatDistance' {
+  import { intlFormatDistance } from 'date-fns/esm'
+  export default intlFormatDistance
 }
 
 declare module 'date-fns/esm/isAfter' {
@@ -11730,6 +11980,11 @@ declare module 'date-fns/esm/setDay' {
 declare module 'date-fns/esm/setDayOfYear' {
   import { setDayOfYear } from 'date-fns/esm'
   export default setDayOfYear
+}
+
+declare module 'date-fns/esm/setDefaultOptions' {
+  import { setDefaultOptions } from 'date-fns/esm'
+  export default setDefaultOptions
 }
 
 declare module 'date-fns/esm/setHours' {
@@ -12347,6 +12602,11 @@ declare module 'date-fns/esm/getDecade/index' {
   export default getDecade
 }
 
+declare module 'date-fns/esm/getDefaultOptions/index' {
+  import { getDefaultOptions } from 'date-fns/esm'
+  export default getDefaultOptions
+}
+
 declare module 'date-fns/esm/getHours/index' {
   import { getHours } from 'date-fns/esm'
   export default getHours
@@ -12460,6 +12720,11 @@ declare module 'date-fns/esm/intervalToDuration/index' {
 declare module 'date-fns/esm/intlFormat/index' {
   import { intlFormat } from 'date-fns/esm'
   export default intlFormat
+}
+
+declare module 'date-fns/esm/intlFormatDistance/index' {
+  import { intlFormatDistance } from 'date-fns/esm'
+  export default intlFormatDistance
 }
 
 declare module 'date-fns/esm/isAfter/index' {
@@ -12910,6 +13175,11 @@ declare module 'date-fns/esm/setDay/index' {
 declare module 'date-fns/esm/setDayOfYear/index' {
   import { setDayOfYear } from 'date-fns/esm'
   export default setDayOfYear
+}
+
+declare module 'date-fns/esm/setDefaultOptions/index' {
+  import { setDefaultOptions } from 'date-fns/esm'
+  export default setDefaultOptions
 }
 
 declare module 'date-fns/esm/setHours/index' {
@@ -13527,6 +13797,11 @@ declare module 'date-fns/esm/getDecade/index.js' {
   export default getDecade
 }
 
+declare module 'date-fns/esm/getDefaultOptions/index.js' {
+  import { getDefaultOptions } from 'date-fns/esm'
+  export default getDefaultOptions
+}
+
 declare module 'date-fns/esm/getHours/index.js' {
   import { getHours } from 'date-fns/esm'
   export default getHours
@@ -13640,6 +13915,11 @@ declare module 'date-fns/esm/intervalToDuration/index.js' {
 declare module 'date-fns/esm/intlFormat/index.js' {
   import { intlFormat } from 'date-fns/esm'
   export default intlFormat
+}
+
+declare module 'date-fns/esm/intlFormatDistance/index.js' {
+  import { intlFormatDistance } from 'date-fns/esm'
+  export default intlFormatDistance
 }
 
 declare module 'date-fns/esm/isAfter/index.js' {
@@ -14090,6 +14370,11 @@ declare module 'date-fns/esm/setDay/index.js' {
 declare module 'date-fns/esm/setDayOfYear/index.js' {
   import { setDayOfYear } from 'date-fns/esm'
   export default setDayOfYear
+}
+
+declare module 'date-fns/esm/setDefaultOptions/index.js' {
+  import { setDefaultOptions } from 'date-fns/esm'
+  export default setDefaultOptions
 }
 
 declare module 'date-fns/esm/setHours/index.js' {
@@ -14933,6 +15218,23 @@ declare module 'date-fns/esm/fp' {
   >
   namespace intlFormat {}
 
+  const intlFormatDistance: CurriedFn2<Date | number, Date | number, string>
+  namespace intlFormatDistance {}
+
+  const intlFormatDistanceWithOptions: CurriedFn3<
+    {
+      style?: string
+      numeric?: string
+      localeMatcher?: string
+      locale?: string | string[]
+      unit?: string
+    },
+    Date | number,
+    Date | number,
+    string
+  >
+  namespace intlFormatDistanceWithOptions {}
+
   const isAfter: CurriedFn2<Date | number, Date | number, boolean>
   namespace isAfter {}
 
@@ -15213,6 +15515,7 @@ declare module 'date-fns/esm/fp' {
 
   const roundToNearestMinutesWithOptions: CurriedFn2<
     {
+      roundingMethod?: string
       nearestTo?: number
     },
     Date | number,
@@ -15431,6 +15734,8 @@ declare module 'date-fns/esm/fp' {
 
   const daysInWeek: number
 
+  const daysInYear: number
+
   const maxTime: number
 
   const millisecondsInMinute: number
@@ -15452,6 +15757,16 @@ declare module 'date-fns/esm/fp' {
   const secondsInHour: number
 
   const secondsInMinute: number
+
+  const secondsInDay: number
+
+  const secondsInWeek: number
+
+  const secondsInYear: number
+
+  const secondsInMonth: number
+
+  const secondsInQuarter: number
 }
 
 declare module 'date-fns/esm/fp/add' {
@@ -16067,6 +16382,16 @@ declare module 'date-fns/esm/fp/intervalToDuration' {
 declare module 'date-fns/esm/fp/intlFormat' {
   import { intlFormat } from 'date-fns/esm/fp'
   export default intlFormat
+}
+
+declare module 'date-fns/esm/fp/intlFormatDistance' {
+  import { intlFormatDistance } from 'date-fns/esm/fp'
+  export default intlFormatDistance
+}
+
+declare module 'date-fns/esm/fp/intlFormatDistanceWithOptions' {
+  import { intlFormatDistanceWithOptions } from 'date-fns/esm/fp'
+  export default intlFormatDistanceWithOptions
 }
 
 declare module 'date-fns/esm/fp/isAfter' {
@@ -17329,6 +17654,16 @@ declare module 'date-fns/esm/fp/intlFormat/index' {
   export default intlFormat
 }
 
+declare module 'date-fns/esm/fp/intlFormatDistance/index' {
+  import { intlFormatDistance } from 'date-fns/esm/fp'
+  export default intlFormatDistance
+}
+
+declare module 'date-fns/esm/fp/intlFormatDistanceWithOptions/index' {
+  import { intlFormatDistanceWithOptions } from 'date-fns/esm/fp'
+  export default intlFormatDistanceWithOptions
+}
+
 declare module 'date-fns/esm/fp/isAfter/index' {
   import { isAfter } from 'date-fns/esm/fp'
   export default isAfter
@@ -18589,6 +18924,16 @@ declare module 'date-fns/esm/fp/intlFormat/index.js' {
   export default intlFormat
 }
 
+declare module 'date-fns/esm/fp/intlFormatDistance/index.js' {
+  import { intlFormatDistance } from 'date-fns/esm/fp'
+  export default intlFormatDistance
+}
+
+declare module 'date-fns/esm/fp/intlFormatDistanceWithOptions/index.js' {
+  import { intlFormatDistanceWithOptions } from 'date-fns/esm/fp'
+  export default intlFormatDistanceWithOptions
+}
+
 declare module 'date-fns/esm/fp/isAfter/index.js' {
   import { isAfter } from 'date-fns/esm/fp'
   export default isAfter
@@ -19264,6 +19609,9 @@ declare module 'date-fns/locale' {
   const be: Locale
   namespace be {}
 
+  const beTarask: Locale
+  namespace beTarask {}
+
   const bg: Locale
   namespace bg {}
 
@@ -19336,9 +19684,6 @@ declare module 'date-fns/locale' {
   const fi: Locale
   namespace fi {}
 
-  const fil: Locale
-  namespace fil {}
-
   const fr: Locale
   namespace fr {}
 
@@ -19386,6 +19731,9 @@ declare module 'date-fns/locale' {
 
   const it: Locale
   namespace it {}
+
+  const itCH: Locale
+  namespace itCH {}
 
   const ja: Locale
   namespace ja {}
@@ -19440,6 +19788,9 @@ declare module 'date-fns/locale' {
 
   const nn: Locale
   namespace nn {}
+
+  const oc: Locale
+  namespace oc {}
 
   const pl: Locale
   namespace pl {}
@@ -19554,6 +19905,11 @@ declare module 'date-fns/locale/az' {
 declare module 'date-fns/locale/be' {
   import { be } from 'date-fns/locale'
   export default be
+}
+
+declare module 'date-fns/locale/be-tarask' {
+  import { beTarask } from 'date-fns/locale'
+  export default beTarask
 }
 
 declare module 'date-fns/locale/bg' {
@@ -19676,11 +20032,6 @@ declare module 'date-fns/locale/fi' {
   export default fi
 }
 
-declare module 'date-fns/locale/fil' {
-  import { fil } from 'date-fns/locale'
-  export default fil
-}
-
 declare module 'date-fns/locale/fr' {
   import { fr } from 'date-fns/locale'
   export default fr
@@ -19759,6 +20110,11 @@ declare module 'date-fns/locale/is' {
 declare module 'date-fns/locale/it' {
   import { it } from 'date-fns/locale'
   export default it
+}
+
+declare module 'date-fns/locale/it-CH' {
+  import { itCH } from 'date-fns/locale'
+  export default itCH
 }
 
 declare module 'date-fns/locale/ja' {
@@ -19849,6 +20205,11 @@ declare module 'date-fns/locale/nl-BE' {
 declare module 'date-fns/locale/nn' {
   import { nn } from 'date-fns/locale'
   export default nn
+}
+
+declare module 'date-fns/locale/oc' {
+  import { oc } from 'date-fns/locale'
+  export default oc
 }
 
 declare module 'date-fns/locale/pl' {
@@ -20011,6 +20372,11 @@ declare module 'date-fns/locale/be/index' {
   export default be
 }
 
+declare module 'date-fns/locale/be-tarask/index' {
+  import { beTarask } from 'date-fns/locale'
+  export default beTarask
+}
+
 declare module 'date-fns/locale/bg/index' {
   import { bg } from 'date-fns/locale'
   export default bg
@@ -20131,11 +20497,6 @@ declare module 'date-fns/locale/fi/index' {
   export default fi
 }
 
-declare module 'date-fns/locale/fil/index' {
-  import { fil } from 'date-fns/locale'
-  export default fil
-}
-
 declare module 'date-fns/locale/fr/index' {
   import { fr } from 'date-fns/locale'
   export default fr
@@ -20214,6 +20575,11 @@ declare module 'date-fns/locale/is/index' {
 declare module 'date-fns/locale/it/index' {
   import { it } from 'date-fns/locale'
   export default it
+}
+
+declare module 'date-fns/locale/it-CH/index' {
+  import { itCH } from 'date-fns/locale'
+  export default itCH
 }
 
 declare module 'date-fns/locale/ja/index' {
@@ -20304,6 +20670,11 @@ declare module 'date-fns/locale/nl-BE/index' {
 declare module 'date-fns/locale/nn/index' {
   import { nn } from 'date-fns/locale'
   export default nn
+}
+
+declare module 'date-fns/locale/oc/index' {
+  import { oc } from 'date-fns/locale'
+  export default oc
 }
 
 declare module 'date-fns/locale/pl/index' {
@@ -20466,6 +20837,11 @@ declare module 'date-fns/locale/be/index.js' {
   export default be
 }
 
+declare module 'date-fns/locale/be-tarask/index.js' {
+  import { beTarask } from 'date-fns/locale'
+  export default beTarask
+}
+
 declare module 'date-fns/locale/bg/index.js' {
   import { bg } from 'date-fns/locale'
   export default bg
@@ -20586,11 +20962,6 @@ declare module 'date-fns/locale/fi/index.js' {
   export default fi
 }
 
-declare module 'date-fns/locale/fil/index.js' {
-  import { fil } from 'date-fns/locale'
-  export default fil
-}
-
 declare module 'date-fns/locale/fr/index.js' {
   import { fr } from 'date-fns/locale'
   export default fr
@@ -20669,6 +21040,11 @@ declare module 'date-fns/locale/is/index.js' {
 declare module 'date-fns/locale/it/index.js' {
   import { it } from 'date-fns/locale'
   export default it
+}
+
+declare module 'date-fns/locale/it-CH/index.js' {
+  import { itCH } from 'date-fns/locale'
+  export default itCH
 }
 
 declare module 'date-fns/locale/ja/index.js' {
@@ -20759,6 +21135,11 @@ declare module 'date-fns/locale/nl-BE/index.js' {
 declare module 'date-fns/locale/nn/index.js' {
   import { nn } from 'date-fns/locale'
   export default nn
+}
+
+declare module 'date-fns/locale/oc/index.js' {
+  import { oc } from 'date-fns/locale'
+  export default oc
 }
 
 declare module 'date-fns/locale/pl/index.js' {
@@ -20906,6 +21287,9 @@ declare module 'date-fns/esm/locale' {
   const be: Locale
   namespace be {}
 
+  const beTarask: Locale
+  namespace beTarask {}
+
   const bg: Locale
   namespace bg {}
 
@@ -20978,9 +21362,6 @@ declare module 'date-fns/esm/locale' {
   const fi: Locale
   namespace fi {}
 
-  const fil: Locale
-  namespace fil {}
-
   const fr: Locale
   namespace fr {}
 
@@ -21028,6 +21409,9 @@ declare module 'date-fns/esm/locale' {
 
   const it: Locale
   namespace it {}
+
+  const itCH: Locale
+  namespace itCH {}
 
   const ja: Locale
   namespace ja {}
@@ -21082,6 +21466,9 @@ declare module 'date-fns/esm/locale' {
 
   const nn: Locale
   namespace nn {}
+
+  const oc: Locale
+  namespace oc {}
 
   const pl: Locale
   namespace pl {}
@@ -21196,6 +21583,11 @@ declare module 'date-fns/esm/locale/az' {
 declare module 'date-fns/esm/locale/be' {
   import { be } from 'date-fns/esm/locale'
   export default be
+}
+
+declare module 'date-fns/esm/locale/be-tarask' {
+  import { beTarask } from 'date-fns/esm/locale'
+  export default beTarask
 }
 
 declare module 'date-fns/esm/locale/bg' {
@@ -21318,11 +21710,6 @@ declare module 'date-fns/esm/locale/fi' {
   export default fi
 }
 
-declare module 'date-fns/esm/locale/fil' {
-  import { fil } from 'date-fns/esm/locale'
-  export default fil
-}
-
 declare module 'date-fns/esm/locale/fr' {
   import { fr } from 'date-fns/esm/locale'
   export default fr
@@ -21401,6 +21788,11 @@ declare module 'date-fns/esm/locale/is' {
 declare module 'date-fns/esm/locale/it' {
   import { it } from 'date-fns/esm/locale'
   export default it
+}
+
+declare module 'date-fns/esm/locale/it-CH' {
+  import { itCH } from 'date-fns/esm/locale'
+  export default itCH
 }
 
 declare module 'date-fns/esm/locale/ja' {
@@ -21491,6 +21883,11 @@ declare module 'date-fns/esm/locale/nl-BE' {
 declare module 'date-fns/esm/locale/nn' {
   import { nn } from 'date-fns/esm/locale'
   export default nn
+}
+
+declare module 'date-fns/esm/locale/oc' {
+  import { oc } from 'date-fns/esm/locale'
+  export default oc
 }
 
 declare module 'date-fns/esm/locale/pl' {
@@ -21653,6 +22050,11 @@ declare module 'date-fns/esm/locale/be/index' {
   export default be
 }
 
+declare module 'date-fns/esm/locale/be-tarask/index' {
+  import { beTarask } from 'date-fns/esm/locale'
+  export default beTarask
+}
+
 declare module 'date-fns/esm/locale/bg/index' {
   import { bg } from 'date-fns/esm/locale'
   export default bg
@@ -21773,11 +22175,6 @@ declare module 'date-fns/esm/locale/fi/index' {
   export default fi
 }
 
-declare module 'date-fns/esm/locale/fil/index' {
-  import { fil } from 'date-fns/esm/locale'
-  export default fil
-}
-
 declare module 'date-fns/esm/locale/fr/index' {
   import { fr } from 'date-fns/esm/locale'
   export default fr
@@ -21856,6 +22253,11 @@ declare module 'date-fns/esm/locale/is/index' {
 declare module 'date-fns/esm/locale/it/index' {
   import { it } from 'date-fns/esm/locale'
   export default it
+}
+
+declare module 'date-fns/esm/locale/it-CH/index' {
+  import { itCH } from 'date-fns/esm/locale'
+  export default itCH
 }
 
 declare module 'date-fns/esm/locale/ja/index' {
@@ -21946,6 +22348,11 @@ declare module 'date-fns/esm/locale/nl-BE/index' {
 declare module 'date-fns/esm/locale/nn/index' {
   import { nn } from 'date-fns/esm/locale'
   export default nn
+}
+
+declare module 'date-fns/esm/locale/oc/index' {
+  import { oc } from 'date-fns/esm/locale'
+  export default oc
 }
 
 declare module 'date-fns/esm/locale/pl/index' {
@@ -22108,6 +22515,11 @@ declare module 'date-fns/esm/locale/be/index.js' {
   export default be
 }
 
+declare module 'date-fns/esm/locale/be-tarask/index.js' {
+  import { beTarask } from 'date-fns/esm/locale'
+  export default beTarask
+}
+
 declare module 'date-fns/esm/locale/bg/index.js' {
   import { bg } from 'date-fns/esm/locale'
   export default bg
@@ -22228,11 +22640,6 @@ declare module 'date-fns/esm/locale/fi/index.js' {
   export default fi
 }
 
-declare module 'date-fns/esm/locale/fil/index.js' {
-  import { fil } from 'date-fns/esm/locale'
-  export default fil
-}
-
 declare module 'date-fns/esm/locale/fr/index.js' {
   import { fr } from 'date-fns/esm/locale'
   export default fr
@@ -22311,6 +22718,11 @@ declare module 'date-fns/esm/locale/is/index.js' {
 declare module 'date-fns/esm/locale/it/index.js' {
   import { it } from 'date-fns/esm/locale'
   export default it
+}
+
+declare module 'date-fns/esm/locale/it-CH/index.js' {
+  import { itCH } from 'date-fns/esm/locale'
+  export default itCH
 }
 
 declare module 'date-fns/esm/locale/ja/index.js' {
@@ -22401,6 +22813,11 @@ declare module 'date-fns/esm/locale/nl-BE/index.js' {
 declare module 'date-fns/esm/locale/nn/index.js' {
   import { nn } from 'date-fns/esm/locale'
   export default nn
+}
+
+declare module 'date-fns/esm/locale/oc/index.js' {
+  import { oc } from 'date-fns/esm/locale'
+  export default oc
 }
 
 declare module 'date-fns/esm/locale/pl/index.js' {
@@ -22863,6 +23280,8 @@ interface dateFns {
 
   getDecade(date: Date | number): number
 
+  getDefaultOptions(): Object
+
   getHours(date: Date | number): number
 
   getISODay(date: Date | number): number
@@ -22955,6 +23374,18 @@ interface dateFns {
     },
     localeOptions?: {
       locale?: string | string[]
+    }
+  ): string
+
+  intlFormatDistance(
+    date: Date | number,
+    baseDate: Date | number,
+    options?: {
+      unit?: string
+      locale?: string | string[]
+      localeMatcher?: string
+      numeric?: string
+      style?: string
     }
   ): string
 
@@ -23176,6 +23607,7 @@ interface dateFns {
     date: Date | number,
     options?: {
       nearestTo?: number
+      roundingMethod?: string
     }
   ): Date
 
@@ -23210,6 +23642,12 @@ interface dateFns {
   ): Date
 
   setDayOfYear(date: Date | number, dayOfYear: number): Date
+
+  setDefaultOptions(newOptions: {
+    locale?: Locale
+    weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6
+    firstWeekContainsDate?: 1 | 2 | 3 | 4 | 5 | 6 | 7
+  }): void
 
   setHours(date: Date | number, hours: number): Date
 
@@ -23328,6 +23766,8 @@ interface dateFns {
 
   daysInWeek: number
 
+  daysInYear: number
+
   maxTime: number
 
   millisecondsInMinute: number
@@ -23349,4 +23789,14 @@ interface dateFns {
   secondsInHour: number
 
   secondsInMinute: number
+
+  secondsInDay: number
+
+  secondsInWeek: number
+
+  secondsInYear: number
+
+  secondsInMonth: number
+
+  secondsInQuarter: number
 }

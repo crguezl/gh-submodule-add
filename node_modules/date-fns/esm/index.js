@@ -1,4 +1,4 @@
-// This file is generated automatically by `scripts/build/indices.js`. Please, don't change it.
+// This file is generated automatically by `scripts/build/indices.ts`. Please, don't change it.
 export { default as add } from "./add/index.js";
 export { default as addBusinessDays } from "./addBusinessDays/index.js";
 export { default as addDays } from "./addDays/index.js";
@@ -79,6 +79,7 @@ export { default as getDayOfYear } from "./getDayOfYear/index.js";
 export { default as getDaysInMonth } from "./getDaysInMonth/index.js";
 export { default as getDaysInYear } from "./getDaysInYear/index.js";
 export { default as getDecade } from "./getDecade/index.js";
+export { default as getDefaultOptions } from "./getDefaultOptions/index.js";
 export { default as getHours } from "./getHours/index.js";
 export { default as getISODay } from "./getISODay/index.js";
 export { default as getISOWeek } from "./getISOWeek/index.js";
@@ -102,6 +103,7 @@ export { default as hoursToMinutes } from "./hoursToMinutes/index.js";
 export { default as hoursToSeconds } from "./hoursToSeconds/index.js";
 export { default as intervalToDuration } from "./intervalToDuration/index.js";
 export { default as intlFormat } from "./intlFormat/index.js";
+export { default as intlFormatDistance } from "./intlFormatDistance/index.js";
 export { default as isAfter } from "./isAfter/index.js";
 export { default as isBefore } from "./isBefore/index.js";
 export { default as isDate } from "./isDate/index.js";
@@ -192,6 +194,7 @@ export { default as set } from "./set/index.js";
 export { default as setDate } from "./setDate/index.js";
 export { default as setDay } from "./setDay/index.js";
 export { default as setDayOfYear } from "./setDayOfYear/index.js";
+export { default as setDefaultOptions } from "./setDefaultOptions/index.js";
 export { default as setHours } from "./setHours/index.js";
 export { default as setISODay } from "./setISODay/index.js";
 export { default as setISOWeek } from "./setISOWeek/index.js";
