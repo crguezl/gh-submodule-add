@@ -85,6 +85,53 @@ $ gh cd ''
 $ gh pwd
 ```
 
+
+## Forked repositories
+
+In 2024 GitHub Classroom changed the way student repositories are created for
+assignments. Now they are created change lead to the introduction of the `-k  -fork` option. 
+
+Here follows an example. I f you use `-k only` only the forked repositories will be cloned:
+
+
+``` 
+➜  aprender-markdown gh submodule-add -k only -s aprender 
+Error!: Unless one of the options "-n" or "-C" are used, the current folder must be the root of a git repo when running this command!
+➜  aprender-markdown git init .
+Inicializado repositorio Git vacío en /Users/casianorodriguezleon/campus-virtual/2425/dmsi2425/practicas-alumnos/aprender-markdown/.git/
+➜  aprender-markdown git:(main) gh submodule-add -k only -s aprender
+cloning with 2 concurrent processes ...
+[0] Clonando en 'aprender-markdown-aaron-ramirez-valencia-alu0101438238'...
+[1] Clonando en 'aprender-markdown-casiano-rodriguez-leon-alu0100291865'...
+[1] git clone https://github.com/ULL-ESIT-DMSI-2425/aprender-markdown-casiano-rodriguez-leon-alu0100291865.git  exited with code 0
+[2] Clonando en 'aprender-markdown-alejandro-melian-lemes-alu0101443126'...
+[0] git clone https://github.com/ULL-ESIT-DMSI-2425/aprender-markdown-aaron-ramirez-valencia-alu0101438238.git  exited with code 0
+[2] git clone https://github.com/ULL-ESIT-DMSI-2425/aprender-markdown-alejandro-melian-lemes-alu0101443126.git  exited with code 0
+undefined
+Inside urls.forEach
+Agregando el repositorio existente en 'aprender-markdown-aaron-ramirez-valencia-alu0101438238' al índice
+Migrando directorio git de 'aprender-markdown-aaron-ramirez-valencia-alu0101438238' desde
+'/Users/casianorodriguezleon/campus-virtual/2425/dmsi2425/practicas-alumnos/aprender-markdown/aprender-markdown-aaron-ramirez-valencia-alu0101438238/.git' hacia
+'/Users/casianorodriguezleon/campus-virtual/2425/dmsi2425/practicas-alumnos/aprender-markdown/.git/modules/aprender-markdown-aaron-ramirez-valencia-alu0101438238'
+Agregando el repositorio existente en 'aprender-markdown-casiano-rodriguez-leon-alu0100291865' al índice
+Migrando directorio git de 'aprender-markdown-casiano-rodriguez-leon-alu0100291865' desde
+'/Users/casianorodriguezleon/campus-virtual/2425/dmsi2425/practicas-alumnos/aprender-markdown/aprender-markdown-casiano-rodriguez-leon-alu0100291865/.git' hacia
+'/Users/casianorodriguezleon/campus-virtual/2425/dmsi2425/practicas-alumnos/aprender-markdown/.git/modules/aprender-markdown-casiano-rodriguez-leon-alu0100291865'
+Agregando el repositorio existente en 'aprender-markdown-alejandro-melian-lemes-alu0101443126' al índice
+Migrando directorio git de 'aprender-markdown-alejandro-melian-lemes-alu0101443126' desde
+'/Users/casianorodriguezleon/campus-virtual/2425/dmsi2425/practicas-alumnos/aprender-markdown/aprender-markdown-alejandro-melian-lemes-alu0101443126/.git' hacia
+'/Users/casianorodriguezleon/campus-virtual/2425/dmsi2425/practicas-alumnos/aprender-markdown/.git/modules/aprender-markdown-alejandro-melian-lemes-alu0101443126'
+➜  aprender-markdown git:(main) ✗ ls -la
+total 8
+drwxr-xr-x   7 casianorodriguezleon  staff  224 20 sep 12:37 .
+drwxr-xr-x   4 casianorodriguezleon  staff  128 18 sep 11:37 ..
+drwxr-xr-x@ 11 casianorodriguezleon  staff  352 20 sep 12:37 .git
+-rw-r--r--@  1 casianorodriguezleon  staff  708 20 sep 12:37 .gitmodules
+drwxr-xr-x@  7 casianorodriguezleon  staff  224 20 sep 12:36 aprender-markdown-aaron-ramirez-valencia-alu0101438238
+drwxr-xr-x@  7 casianorodriguezleon  staff  224 20 sep 12:37 aprender-markdown-alejandro-melian-lemes-alu0101443126
+drwxr-xr-x@  7 casianorodriguezleon  staff  224 20 sep 12:37 aprender-markdown-casiano-rodriguez-leon-alu0100291865
+```
+
 ## See also
 
 * [gh extension to remove submodules](https://github.com/crguezl/gh-submodule-rm/blob/main/gh-submodule-rm)
