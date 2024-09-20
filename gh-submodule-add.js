@@ -41,6 +41,7 @@ program
   .option('-r, --regexp <regexp>', 'filter <query> results using <regexp>')
   .option('-c, --csr <comma separated list of repos>', 'the list of repos is specified as a comma separated list')
   .option('-f, --file <file>', 'file with the list of repos, one per line')
+  .option('-k, --fork <value>', 'Include fork repos. Legal values: "true", "only", "false". Default is "true"')
   .option('-n --dryrun','just show what repos will be added as submodules')
   .option('-C --clone','clone only. Skip submodule adds and aborbgitdirs steps')
   .option('-o --org <org>', 'organization or user')
