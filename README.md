@@ -89,7 +89,7 @@ $ gh pwd
 ## Forked repositories
 
 In 2024 GitHub Classroom changed the way student repositories are created for
-assignments. Now they are created change lead to the introduction of the `-k  -fork` option. 
+assignments: they are forked from the templates.  Use the `-k  -fork` option to clone the students repositories
 
 Here follows an example. I f you use `-k only` only the forked repositories will be cloned:
 
